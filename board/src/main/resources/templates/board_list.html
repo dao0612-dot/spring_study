@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 리스트</title>
+</head>
+<body>
+
+<h1>게시판 리스트</h1>
+<!-- th:text 사용법 -->
+<table>
+    <tr>
+        <th>제목</th>
+        <th>내용</th>
+        <th>추천수</th>
+    </tr>
+    <tr th:each="post : ${posts}">
+        <td th:text="${post['제목']}"></td>
+        <td th:text="${post['내용']}"></td>
+        <td th:text="${post['추천수']}"></td>
+    </tr>
+</table>
+
+
+<!-- 태그 없이 인라인으로 출력할 경우 [[...]] 사용 가능 -->
+<!--<p>메인 화면입니다. [[${main}]]</p>-->
+
+</body>
+</html>
