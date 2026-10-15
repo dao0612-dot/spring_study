@@ -3,6 +3,8 @@ package com.study.board.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,6 +33,14 @@ public class BoardController {
 
     @GetMapping("/board/post")
     public String boardPost(){
-        return ;
+        return "board_post";
+    }
+
+    @PostMapping("/board/post")
+    public String boardPostadd(@RequestParam("title") String title,@RequestParam("content") String content,@RequestParam("username") String username){
+        System.out.println(title);
+        System.out.println(content);
+        System.out.println(username);
+        return "redirect:/board/list";
     }
 }
