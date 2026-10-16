@@ -22,19 +22,6 @@ public class BoardRestController {
     @GetMapping("/api/board/list")
     public List<Map<String, Object>> list() {
         List<Map<String, Object>> list = new ArrayList<>();
-//        Map<String, Object> map1 = new LinkedHashMap<>();
-//        map1.put("제목","안녕하세요");
-//        map1.put("내용","반갑습니다");
-//        map1.put("추천 수", 6);
-//        list.add(map1);
-//
-//        Map<String, Object> map2 = new LinkedHashMap<>();
-//        map2.put("제목","잘 부탁드려요");
-//        map2.put("내용","열심히 해봐요");
-//        map2.put("추천 수", 10);
-//        list.add(map2);
-
-//        Map<String, Object> map = new LinkedHashMap<>();
         for (int i=1; i<=3; i++){
             Map<String, Object> map = new LinkedHashMap<>();
 
