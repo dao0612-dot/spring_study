@@ -1,4 +1,4 @@
-package com.study.board.VO;
+package com.study.board.vo;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -15,10 +15,10 @@ public class MemberRestController {
     }
 
     @GetMapping("/hello2")
-    public Map<String, Integer> hello2(){
-        Map<String, Integer> hello2 = new HashMap<>();
-        hello2.put("안녕하세요?",1);
-        hello2.put("반가워요?",2);
+    public Map<Integer, String> hello2(){
+        Map<Integer, String> hello2 = new HashMap<>();
+        hello2.put(1, "안녕하세요?");
+        hello2.put(2, "반가워요?");
         return hello2;
     }
 }

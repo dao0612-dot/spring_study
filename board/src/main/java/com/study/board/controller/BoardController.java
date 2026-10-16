@@ -20,9 +20,8 @@ public class BoardController {
         for (int i=1; i<=3; i++){
             Map<String, Object> map = new LinkedHashMap<>();
 
-            map.put("제목", i + "번째 제목");
-            map.put("내용", i + "번째 내용");
-            map.put("추천수", i);
+            map.put("title", i + "번째 제목");
+            map.put("content", i + "번째 내용");
             list.add(map);
         }
 
@@ -37,7 +36,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/post")
-    public String boardPostadd(@RequestParam("title") String title,@RequestParam("content") String content,@RequestParam("username") String username){
+    public String boardPostSave(@RequestParam("title") String title, @RequestParam("content") String content, @RequestParam("username") String username){
         System.out.println(title);
         System.out.println(content);
         System.out.println(username);

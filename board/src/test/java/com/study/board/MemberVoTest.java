@@ -1,6 +1,6 @@
 package com.study.board;
 
-import com.study.board.VO.MemberVo;
+import com.study.board.vo.MemberVo;
 import org.junit.jupiter.api.Test;
 
 public class MemberVoTest {

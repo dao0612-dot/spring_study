@@ -1,5 +1,21 @@
 ## 기능 정의서
 
+
+### 사용 스펙
+  ㄴ 언어: Java 21
+  ㄴ 프레임워크: Spring Boot 3.5.16
+  ㄴ 빌드: Maven
+  ㄴ DB: H2 2.5.252 서버 모드
+  ㄴ DB 접근: MyBatis
+  ㄴ 화면: Thymeleaf + 부트스트랩
+  ㄴ 데이터 모양: Map<>, List<>, VO(Lombok), DTO(record)
+  ㄴ JSON: Jackson, ResponseEntity
+  ㄴ 인증: Spring Security
+  ㄴ 테스트: JUnit 5
+  ㄴ 도구: IntelliJ, H2 콘솔, GitHub, 브레이크포인트 디버깅 모드, 크롬 개발자 도구
+
+(참고사항) 롬복 VO와 record는 연습용으로 둘 다 사용
+
 ### 회원
 - 기본 CRUD: 회원가입, 로그인, 회원정보 수정, 회원탈퇴
 - 부가 기능: 내 정보 자세히 보기(마이 페이지)
@@ -7,6 +23,7 @@
 ### 게시판
 - 기본 CRUD: 게시글 작성, 게시글 목록 읽기, 게시글 자세히 보기, 게시글 수정, 게시글 삭제
 - 부가 기능: 게시글에 파일 업로드
+- 추가 기능 후보(현재 범위 밖): 게시글 추천(추천 수). 만들 경우 숫자 칸 하나로 할지, "누가 추천했는지" 별도 테이블로 할지(중복 추천 방지) 결정 필요
 
 
 ## 기능 세부 내역
@@ -52,23 +69,30 @@
 ### 테이블(member, board)
 
 create table member(
-id int AUTO_INCREMENT PRIMARY KEY,
-name varchar(50) not null,
-user_id varchar(50) not null,
-password varchar(250),
-role enum('user','admin') not null default 'user',
-active bool not null default 1
+member_idx int AUTO_INCREMENT PRIMARY KEY, -- 회원번호(PK)
+user_id varchar(50) not null UNIQUE, -- 사용자 계정
+pwd varchar(250) not null, -- 사용자 비밀번호
+name varchar(50) not null, -- 사용자 이름
+role enum('user','admin') not null default 'user', -- 권한등급
+use_yn enum('Y','N') not null default 'Y', -- 활성화 여부(Y시 활성화 판정)
+reg_dttm timestamp not null default current_timestamp, -- 가입 시각
+upt_dttm timestamp, -- 회원정보 마지막 수정 시각(수정 전엔 NULL)
+del_dttm timestamp -- 탈퇴 시각(use_yn을 'N'으로 바꿀 때 기록, 탈퇴 전엔 NULL)
 );
 
 
 create table board(
-id int AUTO_INCREMENT PRIMARY KEY,
-title varchar(255),
-member_id int,
-content varchar(3000),
-del_yn enum('Y','N') not null default 'N',
-created_at timestamp default current_timestamp,
-CONSTRAINT member_fk FOREIGN key(member_id) REFERENCES member(id)
+board_idx int AUTO_INCREMENT PRIMARY KEY, -- 게시글번호(PK)
+title varchar(255) not null, -- 게시글 제목
+content varchar(3000), -- 게시글 내용
+member_idx int not null, -- 글쓴이(회원번호 연동/FK)
+del_yn enum('Y','N') not null default 'N', -- 게시글 삭제 여부(Y시 삭제 판정)
+reg_dttm timestamp not null default current_timestamp, -- 생성 시 시간 기록(등록자 = 글쓴이 member_idx)
+upt_member_idx int, -- 마지막 수정자 회원번호(수정 전엔 NULL)
+upt_dttm timestamp, -- 마지막 수정 시각(수정 전엔 NULL)
+del_member_idx int, -- 삭제(숨김) 처리한 회원번호(글쓴이 또는 admin, 삭제 전엔 NULL)
+del_dttm timestamp, -- 삭제(숨김) 처리 시각(del_yn을 'Y'로 바꿀 때 기록, 삭제 전엔 NULL)
+CONSTRAINT member_fk FOREIGN key(member_idx) REFERENCES member(member_idx) -- member테이블 member_idx와 FK
 );
 
 ---

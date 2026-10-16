@@ -13,12 +13,10 @@
     <tr>
         <th>제목</th>
         <th>내용</th>
-        <th>추천수</th>
     </tr>
     <tr th:each="post : ${posts}">
-        <td th:text="${post['제목']}"></td>
-        <td th:text="${post['내용']}"></td>
-        <td th:text="${post['추천수']}"></td>
+        <td th:text="${post['title']}"></td>
+        <td th:text="${post['content']}"></td>
     </tr>
 </table>
 
