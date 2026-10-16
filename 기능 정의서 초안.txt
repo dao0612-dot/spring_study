@@ -103,7 +103,7 @@ CONSTRAINT member_fk FOREIGN key(member_idx) REFERENCES member(member_idx) -- me
 - 락은 트랜젝션이 끝날 시 풀린다.
 
 장점:
-- 데이터의 정합성이 보장된다. 즉 DB에서 로직 실수를 방지한다. 
+- 데이터 변화 시 잘못된 참조를 방지한다(정합성)
 - 관계형 데이터베이스의 장점, 테이블만 봐도 관계성을 알아보기 쉽다.
 
 단점:
