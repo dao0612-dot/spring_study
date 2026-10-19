@@ -1,8 +1,10 @@
 package com.study.board.controller;
 
+import com.study.board.dto.BoardWriteRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,9 +38,9 @@ public class BoardController {
     }
 
     @PostMapping("/board/post")
-    public String boardPostSave(@RequestParam("title") String title, @RequestParam("content") String content, @RequestParam("username") String username){
-        System.out.println(title);
-        System.out.println(content);
+    public String boardPostSave(@ModelAttribute BoardWriteRequest req, @RequestParam("username") String username){
+        System.out.println(req.title());
+        System.out.println(req.content());
         System.out.println(username);
         return "redirect:/board/list";
     }

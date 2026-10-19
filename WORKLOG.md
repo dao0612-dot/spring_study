@@ -4,6 +4,16 @@
 
 ---
 
+## [2주차] 2026-10-19(월)
+
+**주요 작업**: JSON 받기(`@RequestBody`), Controller 단원 마무리
+
+- `POST /api/board/post`: JSON 받기(Map → record), 응답 201·400(`ResponseEntity`), Postman 확인
+- 요청 DTO `BoardWriteRequest`(record)·단위 테스트
+- 글쓰기 form을 `@ModelAttribute` + record로 변경, form·JSON 요청 비교(Content-Type·Status)
+
+수정 파일: BoardRestController.java, BoardController.java, dto/BoardWriteRequest.java, BoardWriteRequestTest.java
+
 ## [1주차] 2026-10-16(금)
 
 **주요 작업**: 1주차 피드백 반영, ResponseEntity·Postman 실습

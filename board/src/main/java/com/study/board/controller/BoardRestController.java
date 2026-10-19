@@ -1,8 +1,10 @@
 package com.study.board.controller;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.study.board.dto.BoardWriteRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -17,6 +19,7 @@ public class BoardRestController {
 
         return b;
     }
+
 
 
     @GetMapping("/api/board/list")
@@ -35,5 +38,23 @@ public class BoardRestController {
         }
 
         return list;
+    }
+
+    @PostMapping("/api/board/post")
+    public ResponseEntity<?> postAdd(@RequestBody BoardWriteRequest req){
+        System.out.println(req.title());
+        System.out.println(req.content());
+
+        String title = req.title();
+
+        if (title==null || title.isBlank()){
+
+            Map<String, Object> wrongTitle = new LinkedHashMap<>();
+            wrongTitle.put("message","제목을 입력하세요");
+
+            return ResponseEntity.badRequest().body(wrongTitle);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(req);
     }
 }
