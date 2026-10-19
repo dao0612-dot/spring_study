@@ -6,13 +6,15 @@
 
 ## [2주차] 2026-10-19(월)
 
-**주요 작업**: JSON 받기(`@RequestBody`), Controller 단원 마무리
+**주요 작업**: JSON 받기(`@RequestBody`), Controller 마무리, Service·Mapper로 DB 목록 조회
 
 - `POST /api/board/post`: JSON 받기(Map → record), 응답 201·400(`ResponseEntity`), Postman 확인
 - 요청 DTO `BoardWriteRequest`(record)·단위 테스트
 - 글쓰기 form을 `@ModelAttribute` + record로 변경, form·JSON 요청 비교(Content-Type·Status)
+- `BoardService`(생성자 주입)로 목록 로직 분리
+- MyBatis 연동: `BoardMapper`(인터페이스 + XML), 게시글 목록을 DB에서 조회(H2 대문자 컬럼명 → 별칭으로 해결)
 
-수정 파일: BoardRestController.java, BoardController.java, dto/BoardWriteRequest.java, BoardWriteRequestTest.java
+수정 파일: BoardRestController.java, BoardController.java, dto/BoardWriteRequest.java, BoardWriteRequestTest.java, service/BoardService.java, mapper/BoardMapper.java, mapper/BoardMapper.xml, application.properties
 
 ## [1주차] 2026-10-16(금)
 
