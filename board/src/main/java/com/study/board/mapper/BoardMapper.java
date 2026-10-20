@@ -8,4 +8,5 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
     List<Map<String, Object>> selectBoardList();
+    int insertBoard(Map<String, Object> board);
 }

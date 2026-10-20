@@ -5,4 +5,9 @@
         <!--숨긴 글 제외, 최신순, 별칭 큰따옴표: H2가 대문자 키로 바꾸는 것 방지-->
         select board_idx as "boardIdx", title as "title", content as "content", member_idx as "memberIdx", reg_dttm as "regDttm" from board where del_yn='N' order by board_idx desc
     </select>
+
+    <insert id="insertBoard">
+        insert into board (title, content, member_idx) values (#{title}, #{content}, #{memberIdx})
+    </insert>
+
 </mapper>

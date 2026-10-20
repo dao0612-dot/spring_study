@@ -30,11 +30,17 @@ public class BoardController {
 
 
     // form으로 넘어온 작성글 저장 후 목록으로 redirect (PRG 방식)
-    // TODO: 저장 로직 구현
+    // 제목이 없으면 글쓰기 화면으로 돌아가 제목없음 안내
     @PostMapping("/board/write")
-    public String saveBoard(@ModelAttribute BoardWriteRequest req){
-        System.out.println(req.title());
-        System.out.println(req.content());
+    public String saveBoard(@ModelAttribute BoardWriteRequest req, Model model){
+
+        try {
+            boardService.saveBoard(req);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage",e.getMessage());
+            return "board_write";
+        }
+
         return "redirect:/board/list";
     }
 

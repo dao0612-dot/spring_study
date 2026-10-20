@@ -39,21 +39,16 @@ public class BoardRestController {
     }
 
 
-    // json으로 온 작성글 받은 후 상태 코드+데이터 반환
-    // TODO: 저장 로직 구현
+    // json으로 온 작성글 저장 후 상태 코드 201+데이터 반환
+    // 제목이 없으면 상태 코드 400. 제목없음 안내 문구를 반환
     @PostMapping("/api/board/write")
     public ResponseEntity<?> saveBoard(@RequestBody BoardWriteRequest req){
-        System.out.println(req.title());
-        System.out.println(req.content());
 
-        String title = req.title();
-
-        // title 값이 없거나 공백포함 비어있으면 400
-        if (title==null || title.isBlank()){
-
+        try {
+            boardService.saveBoard(req);
+        } catch (IllegalArgumentException e) {
             Map<String, Object> wrongTitle = new LinkedHashMap<>();
-            wrongTitle.put("message","제목을 입력하세요");
-
+            wrongTitle.put("message", e.getMessage());
             return ResponseEntity.badRequest().body(wrongTitle);
         }
 

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// 연습용
 @RestController
 public class MemberRestController {
 

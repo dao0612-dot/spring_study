@@ -7,6 +7,10 @@
 </head>
 <body>
 
+
+<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+
 <h1>글쓰기</h1>
 
     <form action="/board/write" method="post">
