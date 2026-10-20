@@ -11,11 +11,11 @@
 - 게시판 URL·메서드·Model 이름 통일: 글쓰기 `post` → `write`, 목록 `posts` → `boards`
 - 메서드 이름 규칙: 화면 반환 = 화면 이름(`boardWrite`, `boardList`), 데이터 처리 = 동사 + 대상(`saveBoard`, `getBoardList`)
 - 글쓰기 form의 작성자 입력칸 삭제(작성자는 회원 번호로 처리 예정)
-- 컨트롤러·Service·record·Mapper XML 주석 추가, 미구현 저장 로직 TODO 표시
+- 주석 추가(게시판 코드 전체, 회원 쪽은 연습용 표시), 미구현 부분 TODO 표시(작성자 회원 번호, MemberVo 필드)
 - 게시글 저장: form·JSON 두 입구 → `BoardService.saveBoard` → `BoardMapper.insertBoard`(작성자 회원 번호는 로그인 전까지 임시 고정)
 - 제목 검증을 Service로 이동(예외), 입구별 처리: JSON 400 + message / form은 글쓰기 화면에 안내 문구
 
-수정 파일: BoardController.java, BoardRestController.java, MemberController.java, MemberRestController.java, BoardService.java, BoardMapper.java, BoardWriteRequest.java, BoardMapper.xml, board_list.html, board_write.html(← board_post.html), index.html
+수정 파일: BoardController.java, BoardRestController.java, MemberController.java, MemberRestController.java, BoardService.java, BoardMapper.java, BoardWriteRequest.java, MemberVo.java, BoardMapper.xml, board_list.html, board_write.html(← board_post.html), index.html
 
 ## [2주차] 2026-10-19(월)
 
