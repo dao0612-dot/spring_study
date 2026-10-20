@@ -8,21 +8,16 @@
 <body>
 
 <h1>게시판 리스트</h1>
-<!-- th:text 사용법 -->
 <table>
     <tr>
         <th>제목</th>
         <th>내용</th>
     </tr>
-    <tr th:each="post : ${posts}">
-        <td th:text="${post['title']}"></td>
-        <td th:text="${post['content']}"></td>
+    <tr th:each="board : ${boards}">
+        <td th:text="${board['title']}"></td>
+        <td th:text="${board['content']}"></td>
     </tr>
 </table>
-
-
-<!-- 태그 없이 인라인으로 출력할 경우 [[...]] 사용 가능 -->
-<!--<p>메인 화면입니다. [[${main}]]</p>-->
 
 </body>
 </html>

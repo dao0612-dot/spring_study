@@ -10,11 +10,13 @@ import java.util.Map;
 @RestController
 public class MemberRestController {
 
+    // ResponseEntity<> 연습용
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok("안녕하세요");
     }
 
+    // Map<> 연습용
     @GetMapping("/hello2")
     public Map<Integer, String> hello2(){
         Map<Integer, String> hello2 = new HashMap<>();

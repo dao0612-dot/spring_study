@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
+
+
+// 게시판 화면 렌더링용 컨트롤러
 @Controller
 public class BoardController {
 
@@ -20,24 +22,28 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-
-    @GetMapping("/board/post")
-    public String boardPost(){
-        return "board_post";
+    // 글쓰기 화면
+    @GetMapping("/board/write")
+    public String boardWrite(){
+        return "board_write";
     }
 
-    @PostMapping("/board/post")
-    public String boardPostSave(@ModelAttribute BoardWriteRequest req, @RequestParam("username") String username){
+
+    // form으로 넘어온 작성글 저장 후 목록으로 redirect (PRG 방식)
+    // TODO: 저장 로직 구현
+    @PostMapping("/board/write")
+    public String saveBoard(@ModelAttribute BoardWriteRequest req){
         System.out.println(req.title());
         System.out.println(req.content());
-        System.out.println(username);
         return "redirect:/board/list";
     }
 
+    // 게시글 목록
     @GetMapping("/board/list")
     public String boardList(Model model){
 
-        model.addAttribute("posts",boardService.getBoardList());
+        // board_list.html로 데이터를 가져간다. ${boards}가 받아쓴다.
+        model.addAttribute("boards",boardService.getBoardList());
 
         return "board_list";
     }

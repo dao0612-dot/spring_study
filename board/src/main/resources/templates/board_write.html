@@ -8,17 +8,13 @@
 <body>
 
 <h1>글쓰기</h1>
-<!-- th:text 사용법 -->
 
-    <form action="/board/post" method="post">
+    <form action="/board/write" method="post">
         <label for="title">제목</label>
         <input type="text" id="title" name="title">
 
         <label for="content">내용</label>
         <textarea id="content" name="content"></textarea>
-
-        <label for="username">작성자 이름</label>
-        <input type="text" id="username" name="username">
 
         <button type="submit">게시글 작성</button>
 

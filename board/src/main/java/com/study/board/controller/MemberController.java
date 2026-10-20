@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MemberController {
 
+    // 메인 화면
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("main","메인 화면으로 갑니다.");
         return "index";
     }
 
+    // @ResponseBody 연습용
     @GetMapping("/hello3")
     @ResponseBody
     public String hello(){
