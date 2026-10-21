@@ -7,7 +7,8 @@
     </select>
 
     <insert id="insertBoard">
-        insert into board (title, content, member_idx) values (#{title}, #{content}, #{memberIdx})
+        <!--record는 "board" 이름을 달고 그대로 넘겨받고, memberIdx는 요청(record)에 없는 값이라 따로 넘겨받는다.-->
+        insert into board (title, content, member_idx) values (#{board.title}, #{board.content}, #{memberIdx})
     </insert>
 
 </mapper>
