@@ -4,6 +4,21 @@
 
 ---
 
+## [2주차] 2026-10-21(수)
+
+**주요 작업**: 2주차 피드백 반영(URL·메서드 이름, 저장 결과 확인, 오류 로그, 공통 응답), 저장 데이터 구조 정리
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 저장 URL 변경: `POST /board/write` → `/board/save`, `/api/board/write` → `/api/board/save`. 이름 규칙 추가(데이터 처리 = `/대상/동사` ↔ `동사+대상`, 화면 = 화면 이름, `/api`로 화면·데이터 구분) [피드백 → Claude 사실 정리(회사 코드 URL 동사 집계)·선택지 2개 → 본인 선택·규칙 작성 → Claude 검토]
+- 저장 데이터 구조: Service의 Map 옮겨 담기 제거, Mapper에 요청 record와 회원 번호를 따로 전달(`@Param`, 회원 번호는 요청으로 받지 않음) [본인 문제 제기 → Claude 실마리·DTO 개념 설명 → 본인 결정·작성 → Claude 검토]
+- 저장 결과 확인: `insertBoard` 반환 행 수가 0 이하면 커스텀 예외 `DBNotAffectedException`, form은 글쓰기 화면 + 안내 / JSON은 500 + message [피드백 → Claude 개념 설명·예외 종류 선택지 → 본인 이름·구조 결정, 멀티 catch는 본인 검색 → 본인 작성 → Claude 검토]
+- 오류 로그: 두 컨트롤러에 `@Slf4j`, 제목 없음 `warn`(메시지, 연습용) / 저장 실패 `error`(스택 포함) [Claude 개념 설명 → 본인 위치·대상·레벨 결정 → 본인 작성 → Claude 검토]
+- 공통 응답 DTO `ResponseDto<T>(message, data)` 생성(상태는 HTTP 상태 코드, 모양은 DTO). 컨트롤러 적용은 다음 작업 [Claude 판단 기준 설명 → 본인 칸·이름·형식 결정 → 본인 작성]
+- 피드백 질의응답: 커스텀 예외의 용도, `DataAccessException` vs `Exception` [Claude 설명 → 본인 정리해 답변]
+
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.java, BoardMapper.xml, board_write.html, exception/DBNotAffectedException.java(신규), dto/ResponseDto.java(신규)
+
 ## [2주차] 2026-10-20(화)
 
 **주요 작업**: 2주차 피드백 반영(이름 규칙·주석), 게시글 저장(INSERT)

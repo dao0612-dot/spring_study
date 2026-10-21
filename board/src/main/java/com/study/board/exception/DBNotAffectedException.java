@@ -7,3 +7,4 @@ public class DBNotAffectedException extends RuntimeException {
         super(message);
     }
 }
+

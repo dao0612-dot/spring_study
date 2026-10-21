@@ -2,6 +2,7 @@ package com.study.board.controller;
 
 
 import com.study.board.dto.BoardWriteRequest;
+import com.study.board.dto.ResponseDto;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,6 @@ public class BoardRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dataNotAffect);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto<>(null, req));
     }
 }
