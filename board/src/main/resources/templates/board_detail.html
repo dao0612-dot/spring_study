@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 자세히 보기</title>
+</head>
+<body>
+
+<h1 th:text="${board.title}"></h1>
+<p th:text="${board.content}"></p>
+<p th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>
+<!--TODO: 수정일이 존재할 시 작성일이 안보이도록-->
+<p th:if="${board.uptDttm}" th:text="${#temporals.format(board.uptDttm, 'yyyy-MM-dd HH:mm')}"></p>
+<a href="/board/list">목록</a>
+<a th:href="@{/board/edit/{idx}(idx=${board.boardIdx})}">수정</a>
+
+
+</body>
+</html>

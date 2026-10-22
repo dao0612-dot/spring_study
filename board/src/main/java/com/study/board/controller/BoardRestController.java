@@ -7,6 +7,7 @@ import com.study.board.exception.BlankValueException;
 import com.study.board.exception.CustomException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.service.BoardService;
+import com.study.board.vo.BoardVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +40,9 @@ public class BoardRestController {
 
     // 게시글 목록 반환
     @GetMapping("/api/board/list")
-    public List<Map<String, Object>> getBoardList(){
+    public ResponseEntity<ResponseDto<List<BoardVo>>> getBoardList(){
 
-        return boardService.getBoardList();
+        return ResponseEntity.ok(new ResponseDto<>(null, boardService.getBoardList()));
     }
 
 

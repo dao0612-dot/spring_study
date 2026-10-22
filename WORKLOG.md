@@ -4,6 +4,23 @@
 
 ---
 
+## [2주차] 2026-10-22(목)
+
+**주요 작업**: 2주차 피드백 반영 마무리(게시판 VO, 공통 응답, 공통 예외), 게시글 상세·수정
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- `MemberVo`·`BoardVo`를 테이블 칸에 맞춤(일시 칸은 `LocalDateTime`) [본인 작성 → Claude 검토(설계서와 칸 대조)]
+- 게시판 객체(VO)로 전환: 저장은 Service에서 요청 DTO → `BoardVo`로 옮겨 Mapper에 전달, 목록·상세 조회도 `BoardVo`(MyBatis 밑줄 → camelCase 자동 변환 설정). 요청 DTO는 바깥 입력 거르기용으로 유지 [Claude 리팩토링 제안(피드백 지시) → 본인 방식 선택·작성 → Claude 검토 → 수정]
+- 공통 응답: JSON 저장의 실패 응답·목록 API도 `ResponseDto`로 통일 [본인 작성 → Claude 검토(제네릭 타입 지정)]
+- 공통 예외: `CustomException`(직접 던지는 예외의 공통 부모) 아래 `BlankValueException`·`DBNotAffectedException`·`NotFoundException`, 컨트롤러는 `CustomException` 하나로 받고 종류별 처리 [본인 "회사 코드 방식" 선택 → Claude 구조 정리·개념 설명 → 본인 작성 → Claude 검토 → 수정]
+- 게시글 상세: `GET /board/detail/{번호}`, 없는 글이면 목록 + 안내(redirect + flash), 목록 제목에 상세 링크 [Claude 단계 안내 → 본인 작성 → Claude 검토 → 수정]
+- 게시글 수정: 수정 화면(기존 값 채움)·처리(`POST /board/update/{번호}`), 수정자·수정 시각 기록, 없는 글이면 목록으로, 상세에 수정 시각 표시 [Claude 단계 안내 → 본인 작성 → Claude 검토(SQL `${}` → `#{}` 등) → 수정]
+- 세션 번호가 URL에 붙지 않도록 설정(`server.servlet.session.tracking-modes=cookie`, 안내 문구 전달에 세션을 쓰면서 주소에 세션 번호가 노출되던 것) [Claude 원인 설명·설정 안내 → 본인 적용]
+- 게시글 삭제(진행 중): 숨김 처리 SQL(`del_yn = 'Y'` + 삭제자·삭제 시각) 작성. Mapper 선언 이름이 SQL id와 아직 다름(`delBoard` ↔ `deleteBoard`), Service는 빈 메서드, 컨트롤러·삭제 버튼 미작성 → 10/23 [본인 작성 → Claude 확인]
+
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.java, BoardMapper.xml, application.properties, board_list.html, MemberVo.java, vo/BoardVo.java(신규), exception/CustomException.java·BlankValueException.java·NotFoundException.java(신규), DBNotAffectedException.java, board_detail.html·board_edit.html(신규)
+
 ## [2주차] 2026-10-21(수)
 
 **주요 작업**: 2주차 피드백 반영(URL·메서드 이름, 저장 결과 확인, 오류 로그, 공통 응답), 저장 데이터 구조 정리
