@@ -4,18 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 
 
-// TODO: member 테이블 설계와 맞게 필드명 재작성
+// member 테이블 행을 객체로
 @Getter
 @Setter
-@ToString(exclude = "password")
+@ToString(exclude = "pwd")
 
 public class MemberVo {
-    private Integer id;
-    private String name;
+    private Integer memberIdx;
     private String userId;
-    private String password;
+    private String pwd;
+    private String name;
     private String role;
-    private Boolean active;
+    private String useYn;
+    private LocalDateTime regDttm;
+    private LocalDateTime uptDttm;
+    private LocalDateTime delDttm;
 }

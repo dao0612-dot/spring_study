@@ -1,8 +1,10 @@
 package com.study.board.service;
 
 import com.study.board.dto.BoardWriteRequest;
+import com.study.board.exception.BlankValueException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.mapper.BoardMapper;
+import com.study.board.vo.BoardVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class BoardService {
 
 
     // 게시글 저장
-    // 제목이 없으면 IllegalArgumentException
+    // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 DBNotAffectedException
     public void saveBoard(BoardWriteRequest req){
 
@@ -33,13 +35,19 @@ public class BoardService {
 
         if (title == null || title.isBlank()){
 
-            throw new IllegalArgumentException("제목을 입력하세요.");
+            throw new BlankValueException("제목을 입력하세요.");
         }
 
+        BoardVo boardVo = new BoardVo();
 
+        boardVo.setTitle(title);
+        boardVo.setContent(req.content());
         // TODO: memberIdx: 1 임시값을 세션으로 적용
+        boardVo.setMemberIdx(1);
+
+
         // 0 이하면 예외, 비정상
-        if (boardMapper.insertBoard(req, 1) <= 0) {
+        if (boardMapper.insertBoard(boardVo) <= 0) {
 
             throw new DBNotAffectedException("저장된 내용이 없습니다. 다시 시도해주세요.");
         }

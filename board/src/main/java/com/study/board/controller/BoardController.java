@@ -2,6 +2,8 @@ package com.study.board.controller;
 
 
 import com.study.board.dto.BoardWriteRequest;
+import com.study.board.exception.BlankValueException;
+import com.study.board.exception.CustomException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,16 +41,20 @@ public class BoardController {
 
         try {
             boardService.saveBoard(req);
-        } catch (IllegalArgumentException e) {
-            // 원인이 예상이 되는 예외이므로 warn + 메세지
-            log.warn("제목 없음: "+e.getMessage());
-            model.addAttribute("errorMessage",e.getMessage());
-            return "board_write";
-        } catch (DBNotAffectedException e) {
-            // 원인이 예상이 어려운 예외이므로 error + 예외객체
-            log.error("DB 또는 서버 에러", e);
-            model.addAttribute("errorMessage",e.getMessage());
-            return "board_write";
+        } catch (CustomException e) {
+            if (e instanceof BlankValueException) {
+                log.warn("필수 값 비었음: " + e.getMessage());
+                model.addAttribute("errorMessage", e.getMessage());
+                return "board_write";
+            } else if (e instanceof DBNotAffectedException) {
+                log.error("DB 변동사항 없음: ", e);
+                model.addAttribute("errorMessage", e.getMessage());
+                return "board_write";
+            } else {
+                log.error("예상치 못한 오류. 예외 처리 경로 미설정 의심", e);
+                model.addAttribute("errorMessage",e.getMessage());
+                return "board_write";
+            }
         }
 
         return "redirect:/board/list";

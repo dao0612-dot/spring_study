@@ -16,8 +16,9 @@
 - 오류 로그: 두 컨트롤러에 `@Slf4j`, 제목 없음 `warn`(메시지, 연습용) / 저장 실패 `error`(스택 포함) [Claude 개념 설명 → 본인 위치·대상·레벨 결정 → 본인 작성 → Claude 검토]
 - 공통 응답 DTO `ResponseDto<T>(message, data)` 생성(상태는 HTTP 상태 코드, 모양은 DTO). JSON 저장의 성공 응답에 적용, 실패 응답(Map)은 다음 작업 [Claude 판단 기준 설명 → 본인 칸·이름·형식 결정 → 본인 작성]
 - 피드백 질의응답: 커스텀 예외의 용도, `DataAccessException` vs `Exception` [Claude 설명 → 본인 정리해 답변]
+- `MemberVo` 필드를 `member` 테이블에 맞춤(`memberIdx`·`userId`·`pwd`·`name`·`role`·`useYn`, 일시 칸은 다음) [본인 작업 → Claude 검토(`@ToString` 제외 대상 이름 불일치로 비밀번호 출력 → 수정)]
 
-수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.java, BoardMapper.xml, board_write.html, exception/DBNotAffectedException.java(신규), dto/ResponseDto.java(신규)
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.java, BoardMapper.xml, board_write.html, MemberVo.java, exception/DBNotAffectedException.java(신규), dto/ResponseDto.java(신규)
 
 ## [2주차] 2026-10-20(화)
 
