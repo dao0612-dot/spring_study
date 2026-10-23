@@ -3,27 +3,61 @@
 <mapper namespace="com.study.board.mapper.BoardMapper">
     <select id="selectBoardList" resultType="com.study.board.vo.BoardVo">
         <!--숨긴 글 제외, 최신순-->
-        select board_idx, title, content, member_idx, reg_dttm from board where del_yn='N' order by board_idx desc
+        select board_idx
+         ,title
+         ,content
+         ,member_idx
+         ,reg_dttm
+        from board
+        where del_yn='N'
+        order by board_idx desc
     </select>
 
     <insert id="insertBoard">
         <!--record와 memberIdx를 BoardVo에 담아서 쓴다-->
-        insert into board (title, content, member_idx) values (#{title}, #{content}, #{memberIdx})
+        insert into board (
+         title
+         ,content
+         ,member_idx
+        ) values (
+         #{title}
+         ,#{content}
+         ,#{memberIdx}
+        )
     </insert>
 
     <select id="selectBoard"  resultType="com.study.board.vo.BoardVo">
         <!--글 번호로 글 하나 조회(삭제글 제외), 없으면 null-->
-        select board_idx, title, content, member_idx, reg_dttm, upt_dttm from board where board_idx = #{boardIdx} and del_yn = 'N'
+        select board_idx
+         ,title
+         ,content
+         ,member_idx
+         ,reg_dttm
+         ,upt_dttm
+        from board
+        where board_idx=#{boardIdx}
+        and del_yn='N'
     </select>
 
     <update id="updateBoard">
         <!--글 번호로 해당 글 수정하기(삭제글 제외), 수정한 유저의 idx, 수정 날짜도 갱신-->
-        update board set title=#{title}, content=#{content}, upt_member_idx=#{uptMemberIdx}, upt_dttm= current_timestamp where board_idx=#{boardIdx} and del_yn='N'
+        update board
+         set title=#{title}
+         ,content=#{content}
+         ,upt_member_idx=#{uptMemberIdx}
+         ,upt_dttm=current_timestamp
+        where board_idx=#{boardIdx}
+        and del_yn='N'
     </update>
 
     <update id="deleteBoard">
         <!--글 번호로 해당 글 삭제 처리하기. 처리한 유저의 idx, 삭제 처리 날짜도 갱신-->
-        update board set del_yn='Y', del_member_idx=#{delMemberIdx}, del_dttm= current_timestamp where board_idx=#{boardIdx} and del_yn='N'
+        update board
+         set del_yn='Y'
+         ,del_member_idx=#{delMemberIdx}
+         ,del_dttm=current_timestamp
+        where board_idx=#{boardIdx}
+        and del_yn='N'
     </update>
 
 </mapper>

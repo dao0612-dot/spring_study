@@ -89,7 +89,18 @@ public class BoardService {
 
     }
 
-    public void delBoard(int boardIdx){
+    // 게시글 삭제
+    // DB에 변동 사항이 없으면 NotFoundException 즉 해당되는 게시글 못찾음
+    public void deleteBoard(int boardIdx){
+
+        BoardVo boardVo = new BoardVo();
+        boardVo.setBoardIdx(boardIdx);
+        // TODO: delMemberIdx 1 임시값을 세션으로 적용
+        boardVo.setDelMemberIdx(1);
+
+        if (boardMapper.deleteBoard(boardVo) <= 0) {
+            throw new NotFoundException("해당되는 게시글이 없습니다.");
+        }
 
     }
 }

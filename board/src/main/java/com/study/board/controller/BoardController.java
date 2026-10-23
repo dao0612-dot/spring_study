@@ -137,4 +137,30 @@ public class BoardController {
         }
         return "redirect:/board/detail/{boardIdx}";
     }
+
+
+    //게시글 삭제하기
+    @PostMapping("/board/delete/{boardIdx}")
+    public String deleteBoard(@PathVariable int boardIdx, RedirectAttributes ra){
+
+        try {
+            boardService.deleteBoard(boardIdx);
+        } catch (CustomException e) {
+            if (e instanceof NotFoundException) {
+                log.warn("해당되는 게시글 없음: " + e.getMessage());
+                ra.addFlashAttribute("errorMessage", e.getMessage());
+                return "redirect:/board/list";
+            } else {
+                log.error("예상치 못한 오류. 예외 처리 미지정 의심", e);
+                ra.addFlashAttribute("errorMessage", "예기치 못한 오류 발생");
+                return "redirect:/board/list";
+
+            }
+        }
+
+        return "redirect:/board/list";
+
+    }
+
+
 }
