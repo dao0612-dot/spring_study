@@ -17,6 +17,7 @@
 - 처리기 확인: 정상 200·201, 빈 제목 400. 실험: 형식이 깨진 JSON이 마지막 `Exception` 처리기에 걸려 500으로 나옴(원래 400) [Claude 제안 → 본인 확인]
 - 처리기 반환도 한 겹으로: 메서드마다 상태가 하나로 고정이라 `ResponseEntity` 대신 `@ResponseStatus` + `ResponseDto`, 깨진 JSON은 전용 처리(400, 사용자 문구는 할 수 있는 행동 안내, 로그는 `warn`) [본인 문제 제기(피드백 원문 재확인) → Claude 방법 정리 → 본인 작성 → Claude 검토(로그 레벨) → 수정]
 - 주말 스프링 시큐리티 예습용 임시 문서(현재 상황·AI 사용 범위·예습 지도) [Claude 작성(본인 요청) → 본인 검토]
+- 스프링 시큐리티 실습(`security-practice` 브랜치, main 미반영): 의존성 추가 시 동작 확인, 공개·로그인 주소 나누기(`SecurityFilterChain`), 기본 폼 로그인, CSRF 토큰 때문에 글쓰기 form을 `th:action`으로 [Claude 단계 안내 → 본인 작성·관찰(DEBUG 로그로 CSRF 403 확인) → Claude 설명]
 
 수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_detail.html, exception/ApiExceptionHandler.java(신규), 주말_시큐리티_예습(10.24~25)_임시.md(신규, 10/26 삭제 예정)
 
