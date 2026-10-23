@@ -14,9 +14,11 @@
 - SQL 작성 형식: 컬럼 한 줄에 하나, 콤마 앞, 조건의 `=` 붙임으로 쿼리 5개 통일 [피드백 → Claude 남은 곳 정리(INSERT는 회사 코드 모양 참고) → 본인 작성·세부 규칙 결정]
 - 응답 객체 한 겹: 공통 예외 처리기 `ApiExceptionHandler`(`@RestControllerAdvice`, 예외 종류별 상태 코드 404·400·500)를 두고 JSON 컨트롤러의 try/catch·`ResponseEntity` 제거, 반환은 `ResponseDto`만(저장 201은 `@ResponseStatus`) [피드백 → Claude 사실 정리(회사 코드 구조 비교)·선택지 → 본인 방식 선택(처리기, 201 유지, 칸 유지) → Claude 단계 안내 → 본인 작성 → Claude 검토(로그 `{}` 누락, 예외 설명 정정) → 수정]
 - 사용자에게 보이는 실패 문구를 예외 메시지 대신 처리기의 고정 문구로(예외 메시지는 로그에만), JSON 쪽 적용 [피드백(본인이 대화에서 다시 찾음) → Claude 선택지 → 본인 선택·작성]
-- 처리기 확인: 정상 200·201, 빈 제목 400. 실험: 형식이 깨진 JSON이 마지막 `Exception` 처리기에 걸려 500으로 나옴(원래 400) → 다음 작업에서 처리 [Claude 제안 → 본인 확인]
+- 처리기 확인: 정상 200·201, 빈 제목 400. 실험: 형식이 깨진 JSON이 마지막 `Exception` 처리기에 걸려 500으로 나옴(원래 400) [Claude 제안 → 본인 확인]
+- 처리기 반환도 한 겹으로: 메서드마다 상태가 하나로 고정이라 `ResponseEntity` 대신 `@ResponseStatus` + `ResponseDto`, 깨진 JSON은 전용 처리(400, 사용자 문구는 할 수 있는 행동 안내, 로그는 `warn`) [본인 문제 제기(피드백 원문 재확인) → Claude 방법 정리 → 본인 작성 → Claude 검토(로그 레벨) → 수정]
+- 주말 스프링 시큐리티 예습용 임시 문서(현재 상황·AI 사용 범위·예습 지도) [Claude 작성(본인 요청) → 본인 검토]
 
-수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_detail.html, exception/ApiExceptionHandler.java(신규)
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_detail.html, exception/ApiExceptionHandler.java(신규), 주말_시큐리티_예습(10.24~25)_임시.md(신규, 10/26 삭제 예정)
 
 ## [2주차] 2026-10-22(목)
 
