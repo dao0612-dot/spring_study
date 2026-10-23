@@ -4,6 +4,20 @@
 
 ---
 
+## [2주차] 2026-10-23(금)
+
+**주요 작업**: 게시글 삭제(CRUD 완료), 2주차 피드백 반영(SQL 작성 형식, 응답 객체 한 겹 + 공통 예외 처리기)
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 게시글 삭제: `POST /board/delete/{번호}`, 숨김 처리(`del_yn = 'Y'` + 삭제자·삭제 시각), 없는 글·이미 삭제된 글은 목록 + 안내, 상세에 삭제 버튼(POST form) [Claude 단계 안내 → 본인 작성 → Claude 검토(컴파일 오류 `;`) → 수정]
+- SQL 작성 형식: 컬럼 한 줄에 하나, 콤마 앞, 조건의 `=` 붙임으로 쿼리 5개 통일 [피드백 → Claude 남은 곳 정리(INSERT는 회사 코드 모양 참고) → 본인 작성·세부 규칙 결정]
+- 응답 객체 한 겹: 공통 예외 처리기 `ApiExceptionHandler`(`@RestControllerAdvice`, 예외 종류별 상태 코드 404·400·500)를 두고 JSON 컨트롤러의 try/catch·`ResponseEntity` 제거, 반환은 `ResponseDto`만(저장 201은 `@ResponseStatus`) [피드백 → Claude 사실 정리(회사 코드 구조 비교)·선택지 → 본인 방식 선택(처리기, 201 유지, 칸 유지) → Claude 단계 안내 → 본인 작성 → Claude 검토(로그 `{}` 누락, 예외 설명 정정) → 수정]
+- 사용자에게 보이는 실패 문구를 예외 메시지 대신 처리기의 고정 문구로(예외 메시지는 로그에만), JSON 쪽 적용 [피드백(본인이 대화에서 다시 찾음) → Claude 선택지 → 본인 선택·작성]
+- 처리기 확인: 정상 200·201, 빈 제목 400. 실험: 형식이 깨진 JSON이 마지막 `Exception` 처리기에 걸려 500으로 나옴(원래 400) → 다음 작업에서 처리 [Claude 제안 → 본인 확인]
+
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_detail.html, exception/ApiExceptionHandler.java(신규)
+
 ## [2주차] 2026-10-22(목)
 
 **주요 작업**: 2주차 피드백 반영 마무리(게시판 VO, 공통 응답, 공통 예외), 게시글 상세·수정
@@ -17,7 +31,7 @@
 - 게시글 상세: `GET /board/detail/{번호}`, 없는 글이면 목록 + 안내(redirect + flash), 목록 제목에 상세 링크 [Claude 단계 안내 → 본인 작성 → Claude 검토 → 수정]
 - 게시글 수정: 수정 화면(기존 값 채움)·처리(`POST /board/update/{번호}`), 수정자·수정 시각 기록, 없는 글이면 목록으로, 상세에 수정 시각 표시 [Claude 단계 안내 → 본인 작성 → Claude 검토(SQL `${}` → `#{}` 등) → 수정]
 - 세션 번호가 URL에 붙지 않도록 설정(`server.servlet.session.tracking-modes=cookie`, 안내 문구 전달에 세션을 쓰면서 주소에 세션 번호가 노출되던 것) [Claude 원인 설명·설정 안내 → 본인 적용]
-- 게시글 삭제(진행 중): 숨김 처리 SQL(`del_yn = 'Y'` + 삭제자·삭제 시각) 작성. Mapper 선언 이름이 SQL id와 아직 다름(`delBoard` ↔ `deleteBoard`), Service는 빈 메서드, 컨트롤러·삭제 버튼 미작성 → 10/23 [본인 작성 → Claude 확인]
+- 게시글 삭제(진행 중): 숨김 처리 SQL(`del_yn = 'Y'` + 삭제자·삭제 시각) 작성. Service는 빈 메서드, 컨트롤러·삭제 버튼 미작성 → 10/23 [본인 작성 → Claude 확인]
 
 수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.java, BoardMapper.xml, application.properties, board_list.html, MemberVo.java, vo/BoardVo.java(신규), exception/CustomException.java·BlankValueException.java·NotFoundException.java(신규), DBNotAffectedException.java, board_detail.html·board_edit.html(신규)
 
