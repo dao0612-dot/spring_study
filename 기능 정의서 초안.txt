@@ -96,6 +96,19 @@ CONSTRAINT member_fk FOREIGN key(member_idx) REFERENCES member(member_idx) -- me
 );
 
 
+create table board_file (
+file_idx int auto_Increment not null primary key, -- 파일번호(PK)
+board_idx int not null, -- 저장한 게시글 출처(board 연동 FK)
+file_original_name varchar(255) not null, -- 파일 원래 이름
+file_save_name varchar(100) not null, -- 파일 저장시 이름
+file_size bigint not null, -- 파일 크기
+del_yn enum('Y', 'N') not null default 'N', -- 삭제 처리 여부
+reg_dttm timestamp not null default current_timestamp, -- 저장 날짜
+del_dttm timestamp, -- 삭제 처리 날짜
+constraint board_file_fk foreign key(board_idx) references board(board_idx) -- board 테이블 board_idx와 FK
+);
+
+
 ### FK의 특징. 장단점.
 
 특징:

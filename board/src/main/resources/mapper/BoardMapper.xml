@@ -13,7 +13,7 @@
         order by board_idx desc
     </select>
 
-    <insert id="insertBoard">
+    <insert id="insertBoard" useGeneratedKeys="true" keyProperty="boardIdx">
         <!--record와 memberIdx를 BoardVo에 담아서 쓴다-->
         insert into board (
          title

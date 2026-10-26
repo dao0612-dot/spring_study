@@ -46,7 +46,7 @@ public class BoardRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDto<BoardWriteRequest> saveBoard(@RequestBody BoardWriteRequest req){
 
-        boardService.saveBoard(req);
+        boardService.saveBoard(req, null);
         return new ResponseDto<>(null, req);
     }
 }

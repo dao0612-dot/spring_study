@@ -10,11 +10,11 @@ import com.study.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.UncheckedIOException;
 
 
 // 게시판 화면 렌더링용 컨트롤러
@@ -39,11 +39,12 @@ public class BoardController {
     // form으로 넘어온 작성글 저장 후 목록으로 redirect (PRG 방식)
     // 제목이 없으면 글쓰기 화면으로 돌아가 제목없음 안내 | warn 로그를 콘솔에 출력(연습용)
     // DB 변동이 없으면 재시도 안내 | error 로그를 콘솔에 출력
+    // 파일이 있으면 함께 저장, 파일 저장 실패 시 글쓰기 화면 + 안내
     @PostMapping("/board/save")
-    public String saveBoard(@ModelAttribute BoardWriteRequest req, Model model){
+    public String saveBoard(@ModelAttribute BoardWriteRequest req, Model model, @RequestParam(value = "file", required = false) MultipartFile file){
 
         try {
-            boardService.saveBoard(req);
+            boardService.saveBoard(req, file);
         } catch (CustomException e) {
             if (e instanceof BlankValueException) {
                 log.warn("필수 값 비었음: " + e.getMessage());
@@ -58,6 +59,10 @@ public class BoardController {
                 model.addAttribute("errorMessage", "예기치 못한 오류 발생");
                 return "board_write";
             }
+        } catch (UncheckedIOException e) {
+            log.error("파일 저장에 실패했습니다. 다시 시도해주세요.", e);
+            model.addAttribute("errorMessage","파일 저장에 실패했습니다. 다시 시도해주세요");
+            return "board_write";
         }
 
         return "redirect:/board/list";

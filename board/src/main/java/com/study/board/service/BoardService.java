@@ -4,9 +4,15 @@ import com.study.board.dto.BoardWriteRequest;
 import com.study.board.exception.BlankValueException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.exception.NotFoundException;
+import com.study.board.file.FileStore;
+import com.study.board.file.StoredFile;
+import com.study.board.mapper.BoardFileMapper;
 import com.study.board.mapper.BoardMapper;
+import com.study.board.vo.BoardFileVo;
 import com.study.board.vo.BoardVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,10 +20,15 @@ import java.util.List;
 public class BoardService {
 
     private final BoardMapper boardMapper;
+    private final BoardFileMapper boardFileMapper;
+    private final FileStore fileStore;
 
-    public BoardService(BoardMapper boardMapper) {
+    public BoardService(BoardMapper boardMapper, BoardFileMapper boardFileMapper, FileStore fileStore) {
         this.boardMapper = boardMapper;
+        this.boardFileMapper = boardFileMapper;
+        this.fileStore = fileStore;
     }
+
 
     // 삭제글 제외한 게시글 목록 조회
     public List<BoardVo> getBoardList(){
@@ -29,7 +40,8 @@ public class BoardService {
     // 게시글 저장
     // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 DBNotAffectedException
-    public void saveBoard(BoardWriteRequest req){
+    @Transactional
+    public void saveBoard(BoardWriteRequest req, MultipartFile file){
 
         String title = req.title();
 
@@ -51,6 +63,23 @@ public class BoardService {
 
             throw new DBNotAffectedException("저장된 내용이 없습니다. 다시 시도해주세요.");
         }
+
+        if (file == null || file.isEmpty()){
+            return;
+        }
+
+        StoredFile storedFile = fileStore.store(file);
+
+        BoardFileVo boardFileVo = new BoardFileVo();
+        boardFileVo.setBoardIdx(boardVo.getBoardIdx());
+        boardFileVo.setFileOriginalName(storedFile.originalName());
+        boardFileVo.setFileSaveName(storedFile.saveName());
+        boardFileVo.setFileSize(storedFile.size());
+
+        if (boardFileMapper.insertBoardFile(boardFileVo) <= 0) {
+            throw new DBNotAffectedException("파일 정보가 저장되지 않았습니다. 다시 시도해주세요.");
+        }
+
     }
 
 
