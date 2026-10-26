@@ -4,6 +4,20 @@
 
 ---
 
+## [3주차] 2026-10-26(월)
+
+**주요 작업**: 2주차 피드백 마무리(화면 실패 문구), JS fetch 목록 화면, 파일 업로드(글쓰기)
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 화면 컨트롤러의 사용자 문구를 예외 메시지 대신 고정 문구로(7곳, 문구는 상수, 예외 메시지는 로그에만) [피드백 → Claude 위치 정리 → 본인 작성(상수 도입) → Claude 검토(`static`) → 수정]
+- JS fetch 목록 화면: `/board/fetch`(화면만 반환) + JS가 `/api/board/list`를 받아 목록을 그림(제목은 글자로만 넣음) [Claude 단계 안내 → 본인 작성 중 막힘 → Claude 예시 → 본인 분석·적용]. fetch로 저장하기는 JS 공부와 함께 다음에
+- 파일 업로드 설계: 게시글 전용 파일 테이블 `board_file`(글 번호 FK, 원래 이름·저장 이름·크기·삭제 칸), 여러 기능이 같이 쓰는 공용 테이블은 나중에 확장 [Claude 선택지·회사 구조 정리 → 본인 결정·설계 → Claude 검토 → 수정]
+- 파일 업로드 구현: 디스크 저장 클래스 분리(UUID 저장 이름, 저장 폴더는 설정 파일), 글 저장과 파일 정보 기록을 한 트랜잭션으로(새 글 번호는 INSERT 후 받아 옴), 글쓰기 form에 파일 칸 [저장 클래스·Service: Claude 예시 → 본인 분석·적용 / VO·Mapper·form·컨트롤러: Claude 단계 안내 → 본인 작성 → Claude 검토 → 수정]
+- 확인: 파일 있는/없는 글 저장, 저장 폴더에 UUID 이름 파일, `board_file` 행과 글 번호 대조. 크기 제한 초과는 컨트롤러 전에 413(오류 화면) → 안내 문구는 다음 작업 [Claude 제안 → 본인 확인]
+
+수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_write.html, application.properties, 기능 정의서 초안.txt, board_fetch.html(신규), file/FileStore.java·StoredFile.java(신규), vo/BoardFileVo.java(신규), mapper/BoardFileMapper.java·BoardFileMapper.xml(신규), 주말_시큐리티_예습(10.24~25)_임시.md(삭제)
+
 ## [2주차] 2026-10-23(금)
 
 **주요 작업**: 게시글 삭제(CRUD 완료), 2주차 피드백 반영(SQL 작성 형식, 응답 객체 한 겹 + 공통 예외 처리기)
