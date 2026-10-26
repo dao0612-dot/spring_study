@@ -4,6 +4,7 @@ package com.study.board.file;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 // 업로드 파일을 디스크(설정의 file.upload-dir)에 저장
+@Slf4j
 @Component
 public class FileStore {
     private final String uploadDir;
@@ -43,4 +45,13 @@ public class FileStore {
         return new StoredFile(originalName, saveName, file.getSize());
     }
 
+    // 저장한 파일을 지운다 (DB 작업 실패 시 정리용)
+    // 지우다 실패해도 원래 예외를 덮지 않도록 여기서 로그만 남긴다
+    public void delete(String saveName){
+        try {
+            Files.deleteIfExists(Path.of(uploadDir).resolve(saveName));
+        } catch (IOException e) {
+            log.warn("파일 삭제 실패: {}", saveName, e);
+        }
+    }
 }

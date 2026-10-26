@@ -15,6 +15,7 @@
 - 파일 업로드 설계: 게시글 전용 파일 테이블 `board_file`(글 번호 FK, 원래 이름·저장 이름·크기·삭제 칸), 여러 기능이 같이 쓰는 공용 테이블은 나중에 확장 [Claude 선택지·회사 구조 정리 → 본인 결정·설계 → Claude 검토 → 수정]
 - 파일 업로드 구현: 디스크 저장 클래스 분리(UUID 저장 이름, 저장 폴더는 설정 파일), 글 저장과 파일 정보 기록을 한 트랜잭션으로(새 글 번호는 INSERT 후 받아 옴), 글쓰기 form에 파일 칸 [저장 클래스·Service: Claude 예시 → 본인 분석·적용 / VO·Mapper·form·컨트롤러: Claude 단계 안내 → 본인 작성 → Claude 검토 → 수정]
 - 확인: 파일 있는/없는 글 저장, 저장 폴더에 UUID 이름 파일, `board_file` 행과 글 번호 대조. 크기 제한 초과는 컨트롤러 전에 413(오류 화면) → 안내 문구는 다음 작업 [Claude 제안 → 본인 확인]
+- 3주차 피드백 반영: 파일을 디스크에 저장한 뒤 DB 기록이 실패하면 저장한 파일을 지우고 예외를 다시 던짐(글도 함께 롤백) [피드백 → Claude 방법 비교·삭제 메서드 예시 → 본인 try/catch 작성 → Claude 검토(삭제 경로) → 수정]. 일부러 실패시켜 보는 확인은 다음에
 
 수정 파일: BoardController.java, BoardRestController.java, BoardService.java, BoardMapper.xml, board_write.html, application.properties, 기능 정의서 초안.txt, board_fetch.html(신규), file/FileStore.java·StoredFile.java(신규), vo/BoardFileVo.java(신규), mapper/BoardFileMapper.java·BoardFileMapper.xml(신규), 주말_시큐리티_예습(10.24~25)_임시.md(삭제)
 

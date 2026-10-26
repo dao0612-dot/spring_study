@@ -68,18 +68,23 @@ public class BoardService {
             return;
         }
 
+
         StoredFile storedFile = fileStore.store(file);
 
-        BoardFileVo boardFileVo = new BoardFileVo();
-        boardFileVo.setBoardIdx(boardVo.getBoardIdx());
-        boardFileVo.setFileOriginalName(storedFile.originalName());
-        boardFileVo.setFileSaveName(storedFile.saveName());
-        boardFileVo.setFileSize(storedFile.size());
+        try {
+            BoardFileVo boardFileVo = new BoardFileVo();
+            boardFileVo.setBoardIdx(boardVo.getBoardIdx());
+            boardFileVo.setFileOriginalName(storedFile.originalName());
+            boardFileVo.setFileSaveName(storedFile.saveName());
+            boardFileVo.setFileSize(storedFile.size());
 
-        if (boardFileMapper.insertBoardFile(boardFileVo) <= 0) {
-            throw new DBNotAffectedException("파일 정보가 저장되지 않았습니다. 다시 시도해주세요.");
+            if (boardFileMapper.insertBoardFile(boardFileVo) <= 0) {
+                throw new DBNotAffectedException("파일 정보가 저장되지 않았습니다. 다시 시도해주세요.");
+            }
+        } catch (RuntimeException e) {
+            fileStore.delete(storedFile.saveName());
+            throw e;
         }
-
     }
 
 
