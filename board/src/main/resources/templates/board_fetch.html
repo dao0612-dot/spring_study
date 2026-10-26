@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 리스트</title>
+</head>
+<body>
+
+<ul id="board-list"></ul>
+
+
+<script>
+    async function loadBoards(){
+        const res = await fetch('/api/board/list');
+        const body = await res.json();
+
+        body.data.forEach(board => {
+            const li = document.createElement('li');                 // <li> 태그를 만듬(화면엔 안뜸)
+            const a = document.createElement('a');                   // <a> 태그를 만듬(화면엔 안뜸)
+            a.href = '/board/detail/' + board.boardIdx;              // <a href="/board/detail/게시글 번호">
+            a.textContent = board.title;                             // <a …>제목</a>
+            li.appendChild(a);                                       // <li><a …>제목</a></li> child는 '안쪽에 넣음'
+            document.getElementById('board-list').appendChild(li);   // 화면의 <ul>에 붙임 마찬가지로 child는 안쪽에
+        });
+
+    }
+    loadBoards();
+
+
+</script>
+</body>
+</html>
