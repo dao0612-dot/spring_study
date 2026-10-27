@@ -4,6 +4,22 @@
 
 ---
 
+## [3주차] 2026-10-27(화)
+
+**주요 작업**: 작업 설계 문서(순서도 포함)를 먼저 만들어 확인받고 시작, 글쓰기 저장 fetch 전환(3주차 피드백), 상세 첨부 파일 목록, 내려받기 준비
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 3주차 피드백 확인: 파일 저장 후 DB 기록 실패 시 파일이 남지 않는 것 확인 [본인 확인]
+- 하루 작업 설계 문서 `design/2026-10-27_글쓰기fetch_파일내려받기.md`: 개요·화면 흐름·처리 흐름·순서도(Mermaid)·API 명세·바꿀 파일·경우별 처리·확인 방법·정할 것. 작업 전에 보여 드리고 받은 의견 6건을 문서 9장에 "받은 의견 → 바꾼 것 → 이유"로 기록(첫 INSERT 실패는 롤백 없음, 상세 목록은 분기 없이 조회한 만큼, 내려받기 전송 중 실패, 예비 저장 경로 유지, 성공 후 이동 둘 다, 예상되는 오류는 직접 처리) [본인 결정(설계를 먼저 보여 드리기) → Claude 설계 초안·순서도 → 본인 검토·질문 → 의견 반영]
+- 글쓰기 저장을 fetch로: 저장 API가 폼 데이터(multipart)를 받도록 변경, 글쓰기 화면은 제출 이벤트를 막고 FormData로 전송 → 성공 시 목록 이동, 실패 시 서버 문구·크기 초과·연결 실패 안내, 입력값·파일 유지, 전송 중 버튼 비활성화(중복 제출 방지) [피드백 → Claude 단계 안내(처음 보는 부분은 예시) → 본인 작성 → Claude 검토(`await` 누락, 주소 앞 `/`) → 수정 → 본인 확인(정상·빈 제목·큰 파일·연타)]
+- 기존 form 저장 경로는 JS가 안 될 때의 예비 경로로 남기고 주석으로 표시 [의견 → 본인 설명·결정]
+- API에 파일 저장 실패 전용 처리(500, 고정 문구, error 로그). 마지막 처리기는 예상치 못한 오류만 [의견 → Claude 위치 안내 → 본인 작성 → Claude 검토(로그에 예외 전달, 이름) → 수정]
+- 상세에 첨부 파일 목록(원래 이름·크기), 글과 따로 조회(글 하나에 파일 여러 개) [Claude 단계 안내 → 본인 작성 → Claude 검토(`th:each` 위치, SQL 모양) → 수정]
+- 내려받기 준비: 파일 번호로 조회하는 쿼리(글과 조인해 파일·글 모두 삭제 안 된 것만), 디스크 파일을 가리키는 `FileStore.load`, 원래 이름 + 파일을 묶는 `DownloadFile`, `BoardService.getBoardFile`(없으면 NotFound, 디스크에 없으면 error 로그) [쿼리·Service: Claude 단계 안내 → 본인 작성 → Claude 검토(`from`·칸 이름 오타, null 검사) → 수정 / `load`: Claude 예시 → 본인 분석·적용]. 컨트롤러와 링크는 다음에
+
+수정 파일: BoardRestController.java, BoardController.java, BoardService.java, ApiExceptionHandler.java, BoardFileMapper.java·BoardFileMapper.xml, file/FileStore.java, file/DownloadFile.java(신규), board_write.html, board_detail.html, design/2026-10-27_글쓰기fetch_파일내려받기.md(신규)
+
 ## [3주차] 2026-10-26(월)
 
 **주요 작업**: 2주차 피드백 마무리(화면 실패 문구), JS fetch 목록 화면, 파일 업로드(글쓰기)
