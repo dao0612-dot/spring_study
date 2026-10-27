@@ -36,6 +36,7 @@ public class BoardController {
     }
 
 
+    // (예비 경로) 글쓰기 화면은 JS(fetch)로 /api/board/save에 저장한다. 이 메서드는 JS가 안 돌 때만 쓰인다.
     // form으로 넘어온 작성글 저장 후 목록으로 redirect (PRG 방식)
     // 제목이 없으면 글쓰기 화면으로 돌아가 제목없음 안내 | warn 로그를 콘솔에 출력(연습용)
     // DB 변동이 없으면 재시도 안내 | error 로그를 콘솔에 출력

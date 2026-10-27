@@ -17,7 +17,7 @@
     </insert>
 
     <select id="selectBoardFileList" resultType="com.study.board.vo.BoardFileVo">
-        <!--파일 리스트 보기-->
+        <!--글 번호로 첨부 파일 목록(삭제 안 된 것만)-->
         select file_idx
          ,file_original_name
          ,file_size
@@ -26,4 +26,14 @@
         and del_yn='N'
     </select>
 
+    <select id="selectBoardFile" resultType="com.study.board.vo.BoardFileVo">
+        <!--내려받기용: 원래 이름·저장 이름, 파일·글 삭제 안 된 것만-->
+        select bf.file_original_name
+         ,bf.file_save_name
+        from board_file bf
+        join board b on b.board_idx=bf.board_idx
+        where bf.file_idx=#{fileIdx}
+        and bf.del_yn='N'
+        and b.del_yn='N'
+    </select>
 </mapper>
