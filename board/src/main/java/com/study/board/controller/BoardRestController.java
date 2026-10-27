@@ -7,6 +7,7 @@ import com.study.board.service.BoardService;
 import com.study.board.vo.BoardVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,12 +42,12 @@ public class BoardRestController {
     }
 
 
-    // json으로 온 작성글 저장 후 상태 코드 201+데이터 반환 | 실패는 ApiExceptionHandler
+    // 폼 데이터로 온 작성글, 파일(있다면) 저장 후 상태 코드 201+데이터 반환 | 실패는 ApiExceptionHandler
     @PostMapping("/api/board/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDto<BoardWriteRequest> saveBoard(@RequestBody BoardWriteRequest req){
+    public ResponseDto<BoardWriteRequest> saveBoard(@ModelAttribute BoardWriteRequest req, @RequestParam(value = "file", required = false) MultipartFile file){
 
-        boardService.saveBoard(req, null);
+        boardService.saveBoard(req, file);
         return new ResponseDto<>(null, req);
     }
 }
