@@ -16,4 +16,14 @@
         )
     </insert>
 
+    <select id="selectBoardFileList" resultType="com.study.board.vo.BoardFileVo">
+        <!--파일 리스트 보기-->
+        select file_idx
+         ,file_original_name
+         ,file_size
+        from board_file
+        where board_idx=#{boardIdx}
+        and del_yn='N'
+    </select>
+
 </mapper>

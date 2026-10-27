@@ -85,6 +85,7 @@ public class BoardController {
     public String boardDetail(@PathVariable int boardIdx, Model model, RedirectAttributes ra){
         try {
             model.addAttribute("board", boardService.getBoard(boardIdx));
+            model.addAttribute("files", boardService.getBoardFileList(boardIdx));
         } catch (CustomException e){
             if (e instanceof NotFoundException){
                 log.warn("찾을 수 없음: " + e.getMessage());

@@ -12,6 +12,12 @@
 <p th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>
 <!--TODO: 수정일이 존재할 시 작성일이 안보이도록-->
 <p th:if="${board.uptDttm}" th:text="${#temporals.format(board.uptDttm, 'yyyy-MM-dd HH:mm')}"></p>
+<ul>
+    <li th:each="file : ${files}">
+    <span th:text="${file.fileOriginalName}"></span>
+    (<span th:text="${file.fileSize}"></span>)
+    </li>
+</ul>
 <a href="/board/list">목록</a>
 <a th:href="@{/board/edit/{idx}(idx=${board.boardIdx})}">수정</a>
 <form th:action="@{/board/delete/{idx}(idx=${board.boardIdx})}" method="post">

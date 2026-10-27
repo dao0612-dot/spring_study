@@ -137,4 +137,9 @@ public class BoardService {
         }
 
     }
+
+    // 파일 리스트
+    public List<BoardFileVo> getBoardFileList(int boardIdx){
+        return boardFileMapper.selectBoardFileList(boardIdx);
+    }
 }
