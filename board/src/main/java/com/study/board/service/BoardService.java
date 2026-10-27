@@ -4,18 +4,22 @@ import com.study.board.dto.BoardWriteRequest;
 import com.study.board.exception.BlankValueException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.exception.NotFoundException;
+import com.study.board.file.DownloadFile;
 import com.study.board.file.FileStore;
 import com.study.board.file.StoredFile;
 import com.study.board.mapper.BoardFileMapper;
 import com.study.board.mapper.BoardMapper;
 import com.study.board.vo.BoardFileVo;
 import com.study.board.vo.BoardVo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class BoardService {
 
@@ -141,5 +145,21 @@ public class BoardService {
     // 파일 리스트
     public List<BoardFileVo> getBoardFileList(int boardIdx){
         return boardFileMapper.selectBoardFileList(boardIdx);
+    }
+
+    // 내려받기용 파일(원래 이름 + 디스크 파일) 조회 | 파일 정보가 없거나 디스크에 없으면 NotFoundException
+    public DownloadFile getBoardFile(int fileIdx){
+
+        BoardFileVo boardFileVo = boardFileMapper.selectBoardFile(fileIdx);
+        if (boardFileVo == null) {
+            throw new NotFoundException("해당 파일을 찾을 수 없습니다.");
+        }
+        Resource resource = fileStore.load(boardFileVo.getFileSaveName());
+        if (resource == null) {
+            log.error("DB와 매칭되는 파일이 저장소에 없거나 읽을 수 없는 파일: fileIdx={}, saveName={}", fileIdx, boardFileVo.getFileSaveName());
+            throw new NotFoundException("해당 파일을 찾을 수 없습니다.");
+        }
+
+        return new DownloadFile(boardFileVo.getFileOriginalName(), resource);
     }
 }

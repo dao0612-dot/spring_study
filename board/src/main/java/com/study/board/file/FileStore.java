@@ -2,6 +2,8 @@ package com.study.board.file;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +55,17 @@ public class FileStore {
         } catch (IOException e) {
             log.warn("파일 삭제 실패: {}", saveName, e);
         }
+    }
+
+
+    // 저장 이름으로 디스크의 파일을 찾아 돌려준다 (내려받기용)
+    // 파일이 없거나 읽을 수 없으면 null
+    public Resource load(String saveName){
+        Resource resource = new FileSystemResource(Path.of(uploadDir).resolve(saveName));
+
+        if (!resource.exists() || !resource.isReadable()){
+            return null;
+        }
+        return resource;
     }
 }
