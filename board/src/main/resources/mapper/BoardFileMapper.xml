@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.study.board.mapper.BoardFileMapper">
+<mapper namespace="com.study.skillup.board.mapper.BoardFileMapper">
     <insert id="insertBoardFile">
         <!--게시글 파일 정보 저장(file_idx·del_yn·reg_dttm은 DB 기본값)-->
         insert into board_file (
@@ -16,7 +16,7 @@
         )
     </insert>
 
-    <select id="selectBoardFileList" resultType="com.study.board.vo.BoardFileVo">
+    <select id="selectBoardFileList" resultType="com.study.skillup.board.vo.BoardFileVo">
         <!--글 번호로 첨부 파일 목록(삭제 안 된 것만)-->
         select file_idx
          ,file_original_name
@@ -26,7 +26,7 @@
         and del_yn='N'
     </select>
 
-    <select id="selectBoardFile" resultType="com.study.board.vo.BoardFileVo">
+    <select id="selectBoardFile" resultType="com.study.skillup.board.vo.BoardFileVo">
         <!--내려받기용: 원래 이름·저장 이름, 파일·글 삭제 안 된 것만-->
         select bf.file_original_name
          ,bf.file_save_name
