@@ -6,8 +6,14 @@ import com.study.board.exception.BlankValueException;
 import com.study.board.exception.CustomException;
 import com.study.board.exception.DBNotAffectedException;
 import com.study.board.exception.NotFoundException;
+import com.study.board.file.DownloadFile;
 import com.study.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 
 
 // 게시판 화면 렌더링용 컨트롤러
@@ -178,5 +185,24 @@ public class BoardController {
         return "board_fetch";
     }
 
+    // 첨부 파일 내려받기: 헤더에 원래 이름을 붙여 파일로 보낸다
+    // 파일 정보가 없거나 디스크에 없으면 404 | warn 로그
+    @GetMapping("/board/file/download/{fileIdx}")
+    public ResponseEntity<Resource> downloadBoardFile(@PathVariable int fileIdx){
+        DownloadFile file;
+        try{
+            file = boardService.getBoardFile(fileIdx);
+        } catch (NotFoundException e){
+            log.warn("내려받을 파일 없음: {}", e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
 
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(file.originalName(), StandardCharsets.UTF_8)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file.resource());
+    }
 }

@@ -14,8 +14,8 @@
 <p th:if="${board.uptDttm}" th:text="${#temporals.format(board.uptDttm, 'yyyy-MM-dd HH:mm')}"></p>
 <ul>
     <li th:each="file : ${files}">
-    <span th:text="${file.fileOriginalName}"></span>
-    (<span th:text="${file.fileSize}"></span>)
+        <a th:href="@{/board/file/download/{idx}(idx=${file.fileIdx})}" th:text="${file.fileOriginalName}"></a>
+        (<span th:text="${file.fileSize}"></span>)
     </li>
 </ul>
 <a href="/board/list">목록</a>
