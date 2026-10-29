@@ -4,6 +4,21 @@
 
 ---
 
+## [3주차] 2026-10-29(목)
+
+**주요 작업**: 스프링 시큐리티 1단계 — 설정 뼈대(주소 규칙·비밀번호 암호화 도구), 회원가입(화면 fetch + CSRF 헤더, 비밀번호 규칙, 아이디 중복 409, BCrypt 저장), 실패 안내 문구 한곳에 모음
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 시큐리티 의존성과 설정(`config/SecurityConfig`): 공개 주소(목록·상세·내려받기·가입·`/error` 등) 외에는 로그인 필요, 로그인은 기본 폼, 비밀번호 암호화 도구(BCrypt)를 빈으로 등록. 확인: 공개 주소는 로그인 없이, 글쓰기 주소는 로그인 화면으로, 잘못된 주소는 오류 화면(400), 토큰 없는 쓰기 요청은 로그인 여부와 상관없이 403(CSRF 검사가 로그인 확인보다 먼저) [Claude 예시 → 본인 분석·작성 → Claude 검토(상세 주소 `/**`, `/error`의 `/`) → 수정 → 본인 확인]
+- 빈 등록(`@Component`·`@Bean`·`@Mapper`)과 생성자 주입, 인터페이스 타입으로 받기를 설정 파일·서비스 코드로 짚음. 암호화 도구 빈을 등록하자 스프링 기본 계정 로그인이 안 되는 것(기본 비교 도구가 우리 BCrypt로 바뀜)을 확인 [본인 질문 → Claude 설명 → 본인 정리]
+- 회원가입: `JoinRequest`(로그에 비밀번호가 안 찍히게 `toString` 재정의), `MemberMapper`+XML(아이디로 조회·저장), `MemberService.join`(빈 칸 400 → 비밀번호 규칙 400 → 아이디 중복 409 → BCrypt 암호화 → 저장, 동시 가입으로 UNIQUE에 걸리면 409로 바꿔 던짐), `POST /api/member/join`(201, 응답에 입력값을 담지 않음), 새 예외 `DuplicateException`·`InvalidValueException`과 처리기 [Claude 단계 안내(처음 보는 정규식·`toString`은 예시) → 본인 작성 → Claude 검토(매퍼 `interface`·namespace, 정규식 괄호, 0줄 비교 방향, 잡은 예외를 다시 던지기) → 수정]
+- 가입 화면 `member/join.html`: 글쓰기와 같은 fetch 방식 + 화면에 심은 CSRF 토큰을 읽어 요청 헤더에 담음, 실패 시 서버 문구 안내·입력 유지 [Claude 단계 안내(CSRF 부분은 예시) → 본인 작성 → Claude 검토(폼 `action` 제거) → 수정 → 본인 확인]
+- 확인(설계 8장): 저장된 비밀번호가 BCrypt 암호문, 같은 비밀번호 두 회원의 암호문이 서로 다름, 중복 아이디 409, 규칙 위반·빈 칸 400, 실패 시 입력 유지 [본인 확인]
+- 실패 안내 문구 정리: 게시판·회원이 같은 처리기를 쓰면서 처리기의 고정 문구가 안 맞게 됨 → 4xx 문구를 `common/exception/ErrorMessage` 상수 한곳에 모으고 던질 때 그 상수를 넣음, 처리기는 예외 메시지를 응답에. 5xx는 고정 문구 유지. 흩어져 있던 같은 뜻의 문장을 하나로(설계 문서 10장 5번, 확인 필요 표시) [본인 결정(문구를 한곳에 — 유지 보수, 회사 코드 구조 비교 후) → Claude 일괄 교체·컴파일 확인]
+
+수정 파일: pom.xml, config/SecurityConfig.java(신규), member/dto/JoinRequest.java·member/mapper/MemberMapper.java·member/service/MemberService.java(신규), MemberMapper.xml(신규), member/join.html(신규), MemberController.java, MemberRestController.java, common/exception/DuplicateException.java·InvalidValueException.java·ErrorMessage.java(신규), ApiExceptionHandler.java, BoardService.java, BoardController.java, 시큐리티 설계 문서(10장 5번)
+
 ## [3주차] 2026-10-28(수)
 
 **주요 작업**: 첨부 파일 내려받기(파일 업로드 완료), 구조 정리(도메인별 패키지·템플릿 폴더·루트 이름), 스프링 시큐리티 설계 문서

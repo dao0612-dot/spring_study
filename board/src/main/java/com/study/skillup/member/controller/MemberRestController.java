@@ -1,16 +1,22 @@
 package com.study.skillup.member.controller;
 
+import com.study.skillup.common.dto.ResponseDto;
+import com.study.skillup.member.dto.JoinRequest;
+import com.study.skillup.member.service.MemberService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 
-// 연습용
+// 회원 API(가입) + 연습용
 @RestController
 public class MemberRestController {
+
+    private final MemberService memberService;
+
+    public MemberRestController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     // ResponseEntity<> 연습용
     @GetMapping("/hello")
@@ -18,12 +24,12 @@ public class MemberRestController {
         return ResponseEntity.ok("안녕하세요");
     }
 
-    // Map<> 연습용
-    @GetMapping("/hello2")
-    public Map<Integer, String> hello2(){
-        Map<Integer, String> hello2 = new HashMap<>();
-        hello2.put(1, "안녕하세요?");
-        hello2.put(2, "반가워요?");
-        return hello2;
+    // 회원가입
+    @PostMapping("/api/member/join")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDto<Void> saveMember(@ModelAttribute JoinRequest req){
+        memberService.join(req);
+
+        return new ResponseDto<>(null, null);
     }
 }

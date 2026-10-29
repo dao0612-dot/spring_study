@@ -5,6 +5,7 @@ import com.study.skillup.board.dto.BoardWriteRequest;
 import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.CustomException;
 import com.study.skillup.common.exception.DBNotAffectedException;
+import com.study.skillup.common.exception.ErrorMessage;
 import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.board.service.BoardService;
@@ -30,8 +31,6 @@ import java.nio.charset.StandardCharsets;
 public class BoardController {
 
     private final BoardService boardService;
-    private static final String BOARD_NOT_FOUND_MESSAGE ="게시글을 찾을 수 없습니다.";
-    private static final String BOARD_TITLE_BLANK_MESSAGE ="제목을 채워주세요.";
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
@@ -56,7 +55,7 @@ public class BoardController {
         } catch (CustomException e) {
             if (e instanceof BlankValueException) {
                 log.warn("필수 값 비었음: " + e.getMessage());
-                model.addAttribute("errorMessage", BOARD_TITLE_BLANK_MESSAGE);
+                model.addAttribute("errorMessage", ErrorMessage.BOARD_TITLE_BLANK);
                 return "board/write";
             } else if (e instanceof DBNotAffectedException) {
                 log.error("DB 변동사항 없음: ", e);
@@ -97,7 +96,7 @@ public class BoardController {
         } catch (CustomException e){
             if (e instanceof NotFoundException){
                 log.warn("찾을 수 없음: " + e.getMessage());
-                ra.addFlashAttribute("errorMessage", BOARD_NOT_FOUND_MESSAGE);
+                ra.addFlashAttribute("errorMessage", ErrorMessage.BOARD_NOT_FOUND);
                 return "redirect:/board/list";
             } else {
                 log.error("예상치 못한 오류. 예외 경로 미지정 의심", e);
@@ -118,7 +117,7 @@ public class BoardController {
         } catch (CustomException e) {
             if (e instanceof NotFoundException) {
                 log.warn("해당되는 게시글이 없음: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", BOARD_NOT_FOUND_MESSAGE);
+                ra.addFlashAttribute("errorMessage", ErrorMessage.BOARD_NOT_FOUND);
                 return "redirect:/board/list";
             } else {
                 log.error("예상치 못한 오류. 예외 경로 미지정 의심", e);
@@ -138,11 +137,11 @@ public class BoardController {
         } catch (CustomException e){
             if (e instanceof BlankValueException){
                 log.warn("필수 값 비었음: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", BOARD_TITLE_BLANK_MESSAGE);
+                ra.addFlashAttribute("errorMessage", ErrorMessage.BOARD_TITLE_BLANK);
                 return "redirect:/board/edit/{boardIdx}";
             } else if (e instanceof NotFoundException){
                 log.warn("해당되는 게시글 없음: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", BOARD_NOT_FOUND_MESSAGE);
+                ra.addFlashAttribute("errorMessage", ErrorMessage.BOARD_NOT_FOUND);
                 return "redirect:/board/list";
             } else {
                 log.error("예상치 못한 오류. 예외 처리 경로 미지정 의심", e);
@@ -163,7 +162,7 @@ public class BoardController {
         } catch (CustomException e) {
             if (e instanceof NotFoundException) {
                 log.warn("해당되는 게시글 없음: " + e.getMessage());
-                ra.addFlashAttribute("errorMessage", BOARD_NOT_FOUND_MESSAGE);
+                ra.addFlashAttribute("errorMessage", ErrorMessage.BOARD_NOT_FOUND);
                 return "redirect:/board/list";
             } else {
                 log.error("예상치 못한 오류. 예외 처리 미지정 의심", e);

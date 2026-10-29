@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.skillup.member.mapper.MemberMapper">
+    <select id="selectMemberByUserId" resultType="com.study.skillup.member.vo.MemberVo">
+        <!--userId에 맞는 계정 행을 하나 가져온다-->
+        select member_idx
+        ,user_id
+        ,pwd
+        ,name
+        ,role
+        ,use_yn
+        from member
+        where user_id=#{userId}
+    </select>
+
+    <insert id="insertMember">
+        <!--MemberVo를 담아서 쓴다-->
+        insert into member (
+        user_id
+        ,pwd
+        ,name
+        ) values (
+        #{userId}
+        ,#{pwd}
+        ,#{name}
+        )
+    </insert>
+</mapper>

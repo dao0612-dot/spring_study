@@ -3,6 +3,7 @@ package com.study.skillup.board.service;
 import com.study.skillup.board.dto.BoardWriteRequest;
 import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.DBNotAffectedException;
+import com.study.skillup.common.exception.ErrorMessage;
 import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.common.file.FileStore;
@@ -51,7 +52,7 @@ public class BoardService {
 
         if (title == null || title.isBlank()){
 
-            throw new BlankValueException("제목을 입력하세요.");
+            throw new BlankValueException(ErrorMessage.BOARD_TITLE_BLANK);
         }
 
         BoardVo boardVo = new BoardVo();
@@ -96,7 +97,7 @@ public class BoardService {
     public BoardVo getBoard(int boardIdx){
         BoardVo boardVo = boardMapper.selectBoard(boardIdx);
         if (boardVo == null){
-            throw new NotFoundException("해당되는 게시글이 없습니다.");
+            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
         }
         return boardVo;
     }
@@ -111,7 +112,7 @@ public class BoardService {
         String title = req.title();
 
         if(title==null || title.isBlank()){
-            throw new BlankValueException("제목을 입력하세요.");
+            throw new BlankValueException(ErrorMessage.BOARD_TITLE_BLANK);
         }
 
         BoardVo boardVo = new BoardVo();
@@ -122,7 +123,7 @@ public class BoardService {
         boardVo.setUptMemberIdx(1);
 
         if (boardMapper.updateBoard(boardVo) <= 0){
-            throw new NotFoundException("해당되는 게시글이 없습니다.");
+            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
         }
 
     }
@@ -137,7 +138,7 @@ public class BoardService {
         boardVo.setDelMemberIdx(1);
 
         if (boardMapper.deleteBoard(boardVo) <= 0) {
-            throw new NotFoundException("해당되는 게시글이 없습니다.");
+            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
         }
 
     }
@@ -152,12 +153,12 @@ public class BoardService {
 
         BoardFileVo boardFileVo = boardFileMapper.selectBoardFile(fileIdx);
         if (boardFileVo == null) {
-            throw new NotFoundException("해당 파일을 찾을 수 없습니다.");
+            throw new NotFoundException(ErrorMessage.BOARD_FILE_NOT_FOUND);
         }
         Resource resource = fileStore.load(boardFileVo.getFileSaveName());
         if (resource == null) {
             log.error("DB와 매칭되는 파일이 저장소에 없거나 읽을 수 없는 파일: fileIdx={}, saveName={}", fileIdx, boardFileVo.getFileSaveName());
-            throw new NotFoundException("해당 파일을 찾을 수 없습니다.");
+            throw new NotFoundException(ErrorMessage.BOARD_FILE_NOT_FOUND);
         }
 
         return new DownloadFile(boardFileVo.getFileOriginalName(), resource);

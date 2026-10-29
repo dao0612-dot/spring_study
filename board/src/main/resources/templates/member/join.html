@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <title>회원가입</title>
+</head>
+<body>
+
+<h1>회원가입</h1>
+
+<form id="join-form">
+    <label for="userId">아이디</label>
+    <input type="text" id="userId" name="userId">
+
+    <label for="pwd">비밀번호</label>
+    <input type="password" id="pwd" name="pwd">
+
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name">
+
+    <button id="join-button" type="submit">회원가입</button>
+
+</form>
+
+<script>
+    const form = document.getElementById('join-form');
+    const button = document.getElementById('join-button');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        button.disabled = true;
+
+        try {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+            const res = await fetch('/api/member/join', {method: 'POST', headers: { [csrfHeader]: csrfToken }, body: formData});
+            if (res.ok) {
+                alert('가입되었습니다.');
+                location.href = '/login';
+            } else {
+                const body = await res.json();
+                alert(body.message);
+                button.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            alert('가입에 실패했습니다. 다시 시도해주세요.');
+            button.disabled = false;
+        }
+
+    });
+
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// 연습용
+// 회원 화면(가입) + 메인·연습용
 @Controller
 public class MemberController {
 
@@ -15,6 +15,13 @@ public class MemberController {
         model.addAttribute("main","메인 화면으로 갑니다.");
         return "index";
     }
+
+    // 회원가입 화면
+    @GetMapping("/member/join")
+    public String memberJoin(){
+        return "member/join";
+    }
+
 
     // @ResponseBody 연습용
     @GetMapping("/hello3")
