@@ -17,7 +17,9 @@
 - 확인(설계 8장): 저장된 비밀번호가 BCrypt 암호문, 같은 비밀번호 두 회원의 암호문이 서로 다름, 중복 아이디 409, 규칙 위반·빈 칸 400, 실패 시 입력 유지 [본인 확인]
 - 실패 안내 문구 정리: 게시판·회원이 같은 처리기를 쓰면서 처리기의 고정 문구가 안 맞게 됨 → 4xx 문구를 `common/exception/ErrorMessage` 상수 한곳에 모으고 던질 때 그 상수를 넣음, 처리기는 예외 메시지를 응답에. 5xx는 고정 문구 유지. 흩어져 있던 같은 뜻의 문장을 하나로(설계 문서 10장 5번, 확인 필요 표시) [본인 결정(문구를 한곳에 — 유지 보수, 회사 코드 구조 비교 후) → Claude 일괄 교체·컴파일 확인]
 
-수정 파일: pom.xml, config/SecurityConfig.java(신규), member/dto/JoinRequest.java·member/mapper/MemberMapper.java·member/service/MemberService.java(신규), MemberMapper.xml(신규), member/join.html(신규), MemberController.java, MemberRestController.java, common/exception/DuplicateException.java·InvalidValueException.java·ErrorMessage.java(신규), ApiExceptionHandler.java, BoardService.java, BoardController.java, 시큐리티 설계 문서(10장 5번)
+- 가입 API 첫 자동 시험(MockMvc) `MemberJoinApiTest`: 앱 전체를 켜고 가짜 요청을 필터부터 DB까지 흘려 정상 201·중복 409·규칙 위반 400·빈 칸 400·CSRF 없음 403과 응답 문구를 코드로 판정, 시험이 끝나면 DB를 되돌림(시험 회원이 남지 않음 확인). 일부러 기대를 깨 실패가 나는 것도 확인 [Claude 예시 → 본인 분석·실행 → 본인 확인]
+
+수정 파일: pom.xml(시큐리티·시큐리티 시험 의존성), test/member/MemberJoinApiTest.java(신규), config/SecurityConfig.java(신규), member/dto/JoinRequest.java·member/mapper/MemberMapper.java·member/service/MemberService.java(신규), MemberMapper.xml(신규), member/join.html(신규), MemberController.java, MemberRestController.java, common/exception/DuplicateException.java·InvalidValueException.java·ErrorMessage.java(신규), ApiExceptionHandler.java, BoardService.java, BoardController.java, 시큐리티 설계 문서(10장 5번)
 
 ## [3주차] 2026-10-28(수)
 
