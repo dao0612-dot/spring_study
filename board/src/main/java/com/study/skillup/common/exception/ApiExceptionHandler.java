@@ -19,52 +19,18 @@ import java.io.UncheckedIOException;
 @RestControllerAdvice(annotations = RestController.class)
 public class ApiExceptionHandler {
 
-    // 대상이 없을 때: 404
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseDto<Void> handleNotFound(NotFoundException e){
-        log.warn("찾을 수 없음: {}", e.getMessage());
-        return new ResponseDto<>(e.getMessage(), null);
-    }
-
-    // 필수 값이 없을 때: 400
-    @ExceptionHandler(BlankValueException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseDto<Void> handleBlankValue(BlankValueException e){
-        log.warn("필수 값 누락: {}", e.getMessage());
-        return new ResponseDto<>(e.getMessage(), null);
-    }
-
-    // insert query가 정상적으로 돌았지만 바뀐 행이 없을 때: 500
-    @ExceptionHandler(DBNotAffectedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseDto<Void> handleDBNotAffected(DBNotAffectedException e){
-        log.error("insert 쿼리 모순 발생(처리 정상, 바뀐 행 없음)", e);
-        return new ResponseDto<>("저장이 완료되지 않았습니다. 다시 시도해주세요.", null);
-    }
-
-    // 이미 있는 값과 겹칠 때: 409
-    @ExceptionHandler(DuplicateException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseDto<Void> handleDuplicate(DuplicateException e){
-        log.warn("중복: {}", e.getMessage());
-        return new ResponseDto<>(e.getMessage(), null);
-    }
-
-    // 값은 있는데 규칙에 안 맞을 때: 400
-    @ExceptionHandler(InvalidValueException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseDto<Void> handleInvalidValue(InvalidValueException e){
-        log.warn("규칙 위반: {}", e.getMessage());
-        return new ResponseDto<>(e.getMessage(), null);
-    }
-
-    // 직접 지정되지 않은 예외: 400
+    // 우리가 던진 예외(CustomException과 그 자식 전부): 상태 코드·회원 문구는 ErrorCode에서, 예외 메시지는 로그에만
+    // 4xx는 warn, 5xx는 error + 스택
     @ExceptionHandler(CustomException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseDto<Void> handleCustom(CustomException e){
-        log.error("직접 지정되지 않은 예외", e);
-        return new ResponseDto<>("예상치 못한 오류입니다.", null);
+    public ResponseEntity<ResponseDto<Void>> handleCustom(CustomException e){
+        ErrorCode code = e.getCode();
+        if (code.getStatus().is5xxServerError()) {
+            log.error("서버 오류({}): {}", code, e.getMessage(), e);
+        } else {
+            log.warn("요청 실패({}): {}", code, e.getMessage());
+        }
+        return ResponseEntity.status(code.getStatus())
+                .body(new ResponseDto<>(code.getMessage(), null));
     }
 
     // 깨진 json: 400

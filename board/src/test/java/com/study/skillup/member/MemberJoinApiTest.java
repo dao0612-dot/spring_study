@@ -1,6 +1,6 @@
 package com.study.skillup.member;
 
-import com.study.skillup.common.exception.ErrorMessage;
+import com.study.skillup.common.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ class MemberJoinApiTest {
 
         mockMvc.perform(joinRequest("mvc_test_user", "abc12345", "시험"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.USER_ID_DUPLICATE));
+                .andExpect(jsonPath("$.message").value(ErrorCode.USER_ID_DUPLICATE.getMessage()));
     }
 
     @Test
@@ -58,7 +58,7 @@ class MemberJoinApiTest {
     void joinPwdRule() throws Exception {
         mockMvc.perform(joinRequest("mvc_test_user", "abcdefgh", "시험"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.PWD_RULE_VIOLATION));
+                .andExpect(jsonPath("$.message").value(ErrorCode.PWD_RULE_VIOLATION.getMessage()));
     }
 
     @Test
@@ -66,7 +66,7 @@ class MemberJoinApiTest {
     void joinBlank() throws Exception {
         mockMvc.perform(joinRequest("mvc_test_user", "abc12345", ""))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.JOIN_BLANK));
+                .andExpect(jsonPath("$.message").value(ErrorCode.JOIN_BLANK.getMessage()));
     }
 
     @Test

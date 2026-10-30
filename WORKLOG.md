@@ -17,7 +17,9 @@
 - 로그인 화면 `member/login.html`(form, 실패 문구), 공통 메뉴 조각 `common/header.html`(홈·게시판·로그인·회원가입·로그아웃 버튼)을 모든 화면 맨 위에, 메인 화면 정리, 가입 성공 후 우리 로그인 화면으로 [Claude 단계 안내(조각은 예시) → 본인 작성 → Claude 검토(링크 `th:href`) → 수정]
 - 확인: 스프링 기본 계정이 사라짐, 가입한 회원으로 로그인, 틀린 비밀번호·없는 아이디는 같은 문구, 로그아웃 뒤 막힌 주소 → 로그인 → 원래 주소로, 로그인 뒤 글쓰기 저장 통과(폼의 CSRF 숨은 칸이 FormData로 감 → 헤더는 추가하지 않음, 설계 10장 7번) [본인 확인]
 
-수정 파일: config/SecurityConfig.java, member/security/LoginMember.java(신규), member/service/MemberDetailsService.java(신규), MemberController.java, common/header.html(신규), member/login.html(신규), index.html, board/*.html·member/join.html(공통 메뉴), 시큐리티 설계 문서(5-2·5-3·4장·10장 6~8번)
+- 받은 의견 반영(예외 메시지는 개발자가 볼 메시지, 회원이 보는 메시지와 오류 코드는 따로): 실패 응답을 `ErrorCode` enum(상태 코드 + 회원 문구)으로 바꿈. 예외는 `ErrorCode`와 개발자용 메시지(로그, 어디서·무엇이·몇 번)를 따로 받고, API 처리기는 우리 예외 처리기 여러 개를 하나로 합쳐 `ErrorCode`의 상태·문구로 응답(4xx는 warn 한 줄, 5xx는 error + 스택을 로그에만), 화면 컨트롤러는 `ErrorCode` 문구를 화면에. 어제 만든 문구 상수 모음(`ErrorMessage`)은 지움. 확인: 가입 시험 5개, 화면 문구, 콘솔에 개발자용 문장, 디버거로 예외 생성부터 응답까지 따라감 [의견 → Claude 설계 반영·예시(enum·공통 예외) → 본인 작성 → Claude 일괄 교체(예외 5종·던지는 곳 14곳·처리기·화면 컨트롤러·시험)·컴파일 → 본인 확인]
+
+수정 파일: config/SecurityConfig.java, member/security/LoginMember.java(신규), member/service/MemberDetailsService.java(신규), MemberController.java, common/header.html(신규), member/login.html(신규), index.html, board/*.html·member/join.html(공통 메뉴), 시큐리티 설계 문서(5-2·5-3·4장·10장 6~9번), common/exception/ErrorCode.java(신규)·CustomException.java·예외 5종·ApiExceptionHandler.java·ErrorMessage.java(삭제), BoardService.java, MemberService.java, BoardController.java, MemberJoinApiTest.java
 
 ## [3주차] 2026-10-29(목)
 

@@ -3,7 +3,7 @@ package com.study.skillup.member.service;
 
 import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.DBNotAffectedException;
-import com.study.skillup.common.exception.ErrorMessage;
+import com.study.skillup.common.exception.ErrorCode;
 import com.study.skillup.common.exception.DuplicateException;
 import com.study.skillup.common.exception.InvalidValueException;
 import com.study.skillup.member.dto.JoinRequest;
@@ -35,15 +35,15 @@ public class MemberService {
     public void join(JoinRequest req){
 
         if (req.userId() == null || req.pwd() == null || req.name() == null || req.userId().isBlank() || req.pwd().isBlank() || req.name().isBlank()){
-            throw new BlankValueException(ErrorMessage.JOIN_BLANK);
+            throw new BlankValueException(ErrorCode.JOIN_BLANK, "가입: 빈 칸");
         }
 
         if (!req.pwd().matches(PWD_RULE)){
-            throw new InvalidValueException(ErrorMessage.PWD_RULE_VIOLATION);
+            throw new InvalidValueException(ErrorCode.PWD_RULE_VIOLATION, "가입: 비밀번호 규칙 위반");
         }
 
         if (memberMapper.selectMemberByUserId(req.userId()) != null) {
-            throw new DuplicateException(ErrorMessage.USER_ID_DUPLICATE);
+            throw new DuplicateException(ErrorCode.USER_ID_DUPLICATE, "가입: 아이디 중복(조회)");
         }
 
         MemberVo memberVo = new MemberVo();
@@ -53,12 +53,12 @@ public class MemberService {
 
         try {
             if(memberMapper.insertMember(memberVo) <= 0){
-                throw new DBNotAffectedException("회원가입에 실패했습니다. 다시 시도해주세요.");
+                throw new DBNotAffectedException(ErrorCode.SAVE_FAILED, "가입: member INSERT 0줄");
             }
 
         } catch (DuplicateKeyException e){
             // 중복 검사를 통과했지만 동시에 같은 아이디로 가입해 UNIQUE에 걸림
-            throw new DuplicateException(ErrorMessage.USER_ID_DUPLICATE);
+            throw new DuplicateException(ErrorCode.USER_ID_DUPLICATE, "가입: 아이디 중복(동시 가입, UNIQUE 위반)");
         }
     }
 }

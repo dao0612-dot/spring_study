@@ -3,7 +3,7 @@ package com.study.skillup.board.service;
 import com.study.skillup.board.dto.BoardWriteRequest;
 import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.DBNotAffectedException;
-import com.study.skillup.common.exception.ErrorMessage;
+import com.study.skillup.common.exception.ErrorCode;
 import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.common.file.FileStore;
@@ -52,7 +52,7 @@ public class BoardService {
 
         if (title == null || title.isBlank()){
 
-            throw new BlankValueException(ErrorMessage.BOARD_TITLE_BLANK);
+            throw new BlankValueException(ErrorCode.BOARD_TITLE_BLANK, "글 저장: 제목 비었음");
         }
 
         BoardVo boardVo = new BoardVo();
@@ -66,7 +66,7 @@ public class BoardService {
         // 0 이하면 예외, 비정상
         if (boardMapper.insertBoard(boardVo) <= 0) {
 
-            throw new DBNotAffectedException("저장된 내용이 없습니다. 다시 시도해주세요.");
+            throw new DBNotAffectedException(ErrorCode.SAVE_FAILED, "글 저장: board INSERT 0줄");
         }
 
         if (file == null || file.isEmpty()){
@@ -84,7 +84,7 @@ public class BoardService {
             boardFileVo.setFileSize(storedFile.size());
 
             if (boardFileMapper.insertBoardFile(boardFileVo) <= 0) {
-                throw new DBNotAffectedException("파일 정보가 저장되지 않았습니다. 다시 시도해주세요.");
+                throw new DBNotAffectedException(ErrorCode.SAVE_FAILED, "파일 정보 저장: board_file INSERT 0줄, boardIdx=" + boardVo.getBoardIdx());
             }
         } catch (RuntimeException e) {
             fileStore.delete(storedFile.saveName());
@@ -97,7 +97,7 @@ public class BoardService {
     public BoardVo getBoard(int boardIdx){
         BoardVo boardVo = boardMapper.selectBoard(boardIdx);
         if (boardVo == null){
-            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "글 조회: 없음, boardIdx=" + boardIdx);
         }
         return boardVo;
     }
@@ -112,7 +112,7 @@ public class BoardService {
         String title = req.title();
 
         if(title==null || title.isBlank()){
-            throw new BlankValueException(ErrorMessage.BOARD_TITLE_BLANK);
+            throw new BlankValueException(ErrorCode.BOARD_TITLE_BLANK, "글 수정: 제목 비었음, boardIdx=" + boardIdx);
         }
 
         BoardVo boardVo = new BoardVo();
@@ -123,7 +123,7 @@ public class BoardService {
         boardVo.setUptMemberIdx(1);
 
         if (boardMapper.updateBoard(boardVo) <= 0){
-            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "글 수정: UPDATE 0줄, boardIdx=" + boardIdx);
         }
 
     }
@@ -138,7 +138,7 @@ public class BoardService {
         boardVo.setDelMemberIdx(1);
 
         if (boardMapper.deleteBoard(boardVo) <= 0) {
-            throw new NotFoundException(ErrorMessage.BOARD_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "글 삭제: UPDATE 0줄, boardIdx=" + boardIdx);
         }
 
     }
@@ -153,12 +153,12 @@ public class BoardService {
 
         BoardFileVo boardFileVo = boardFileMapper.selectBoardFile(fileIdx);
         if (boardFileVo == null) {
-            throw new NotFoundException(ErrorMessage.BOARD_FILE_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.BOARD_FILE_NOT_FOUND, "파일 조회: 정보 없음, fileIdx=" + fileIdx);
         }
         Resource resource = fileStore.load(boardFileVo.getFileSaveName());
         if (resource == null) {
             log.error("DB와 매칭되는 파일이 저장소에 없거나 읽을 수 없는 파일: fileIdx={}, saveName={}", fileIdx, boardFileVo.getFileSaveName());
-            throw new NotFoundException(ErrorMessage.BOARD_FILE_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.BOARD_FILE_NOT_FOUND, "파일 조회: 디스크에 없음, fileIdx=" + fileIdx);
         }
 
         return new DownloadFile(boardFileVo.getFileOriginalName(), resource);
