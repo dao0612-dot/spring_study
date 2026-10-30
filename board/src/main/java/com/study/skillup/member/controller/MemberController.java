@@ -1,7 +1,6 @@
 package com.study.skillup.member.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -11,8 +10,7 @@ public class MemberController {
 
     // 메인 화면
     @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("main","메인 화면으로 갑니다.");
+    public String index(){
         return "index";
     }
 
@@ -20,6 +18,12 @@ public class MemberController {
     @GetMapping("/member/join")
     public String memberJoin(){
         return "member/join";
+    }
+
+    // 로그인 화면(처리는 시큐리티 필터)
+    @GetMapping("/member/login")
+    public String memberLogin(){
+        return "member/login";
     }
 
 

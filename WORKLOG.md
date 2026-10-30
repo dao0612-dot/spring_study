@@ -4,6 +4,21 @@
 
 ---
 
+## [3주차] 2026-10-30(금)
+
+**주요 작업**: 스프링 시큐리티 2단계 — DB 회원으로 로그인·로그아웃, 공통 메뉴
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 로그인 설계 세부를 시작 전에 정해 설계 문서 5-2에 추가: 로그인 화면·처리 주소 `/member/login`, 입력 칸 이름을 DB와 같게(`userId`·`pwd`), 로그인 화면은 form(처리하는 곳이 시큐리티 필터라 결과가 이동으로 옴), 성공 시 원래 가려던 곳 또는 목록, 실패 문구 하나(아이디 없음·비밀번호 틀림을 구분하지 않음), 로그아웃은 POST [Claude 설계 초안 → 본인 확인]
+- `LoginMember`: 시큐리티 `User`를 상속하고 회원 번호를 더함(작성자 연결 때 씀) [Claude 예시 → 본인 분석·적용]
+- `MemberDetailsService`(`UserDetailsService` 구현): 아이디로 회원을 찾아 `LoginMember`로 돌려줌, 없거나 사용 중지면 로그인 실패. 비밀번호 비교는 시큐리티가 BCrypt로 [Claude 예시 → 본인 분석·적용]
+- `SecurityConfig`: 우리 로그인 화면·칸 이름·성공 이동·로그아웃 주소, 로그인 화면 공개 [Claude 예시 → 본인 적용 → Claude 검토(안 쓰는 import·주석) → 수정]
+- 로그인 화면 `member/login.html`(form, 실패 문구), 공통 메뉴 조각 `common/header.html`(홈·게시판·로그인·회원가입·로그아웃 버튼)을 모든 화면 맨 위에, 메인 화면 정리, 가입 성공 후 우리 로그인 화면으로 [Claude 단계 안내(조각은 예시) → 본인 작성 → Claude 검토(링크 `th:href`) → 수정]
+- 확인: 스프링 기본 계정이 사라짐, 가입한 회원으로 로그인, 틀린 비밀번호·없는 아이디는 같은 문구, 로그아웃 뒤 막힌 주소 → 로그인 → 원래 주소로, 로그인 뒤 글쓰기 저장 통과(폼의 CSRF 숨은 칸이 FormData로 감 → 헤더는 추가하지 않음, 설계 10장 7번) [본인 확인]
+
+수정 파일: config/SecurityConfig.java, member/security/LoginMember.java(신규), member/service/MemberDetailsService.java(신규), MemberController.java, common/header.html(신규), member/login.html(신규), index.html, board/*.html·member/join.html(공통 메뉴), 시큐리티 설계 문서(5-2·5-3·4장·10장 6~8번)
+
 ## [3주차] 2026-10-29(목)
 
 **주요 작업**: 스프링 시큐리티 1단계 — 설정 뼈대(주소 규칙·비밀번호 암호화 도구), 회원가입(화면 fetch + CSRF 헤더, 비밀번호 규칙, 아이디 중복 409, BCrypt 저장), 실패 안내 문구 한곳에 모음

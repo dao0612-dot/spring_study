@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<div th:replace="~{common/header :: header}"></div>
 <h1>회원가입</h1>
 
 <form id="join-form">
@@ -42,7 +43,7 @@
             const res = await fetch('/api/member/join', {method: 'POST', headers: { [csrfHeader]: csrfToken }, body: formData});
             if (res.ok) {
                 alert('가입되었습니다.');
-                location.href = '/login';
+                location.href = '/member/login';
             } else {
                 const body = await res.json();
                 alert(body.message);

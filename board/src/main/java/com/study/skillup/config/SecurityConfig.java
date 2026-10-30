@@ -2,7 +2,6 @@ package com.study.skillup.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    // 공개 주소 외에는 로그인 필요, 로그인은 기본 폼
+    // 공개 주소 외에는 로그인 필요, 로그인은 우리 화면(/member/login), 로그아웃은 POST
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -21,12 +20,21 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/board/list", "/board/detail/**", "/board/fetch",
                                 "/api/board/list", "/board/file/download/**",
-                                "/member/join", "/api/member/join",
+                                "/member/join", "/api/member/join", "/member/login",
                                 "/error"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/member/login")
+                        .usernameParameter("userId")
+                        .passwordParameter("pwd")
+                        .defaultSuccessUrl("/board/list")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/member/logout")
+                        .logoutSuccessUrl("/board/list")
+                );
 
         return http.build();
     }

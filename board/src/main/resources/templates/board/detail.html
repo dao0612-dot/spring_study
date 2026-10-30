@@ -6,7 +6,7 @@
     <title>게시글 자세히 보기</title>
 </head>
 <body>
-
+<div th:replace="~{common/header :: header}"></div>
 <h1 th:text="${board.title}"></h1>
 <p th:text="${board.content}"></p>
 <p th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>
