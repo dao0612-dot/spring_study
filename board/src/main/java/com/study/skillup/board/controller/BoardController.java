@@ -8,12 +8,14 @@ import com.study.skillup.common.exception.DBNotAffectedException;
 import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.board.service.BoardService;
+import com.study.skillup.member.security.LoginMember;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,10 +49,10 @@ public class BoardController {
     // DB 변동이 없으면 재시도 안내 | error 로그를 콘솔에 출력
     // 파일이 있으면 함께 저장, 파일 저장 실패 시 글쓰기 화면 + 안내
     @PostMapping("/board/save")
-    public String saveBoard(@ModelAttribute BoardWriteRequest req, Model model, @RequestParam(value = "file", required = false) MultipartFile file){
+    public String saveBoard(@ModelAttribute BoardWriteRequest req, Model model, @RequestParam(value = "file", required = false) MultipartFile file, @AuthenticationPrincipal LoginMember loginMember){
 
         try {
-            boardService.saveBoard(req, file);
+            boardService.saveBoard(req, file, loginMember.getMemberIdx());
         } catch (CustomException e) {
             if (e instanceof BlankValueException) {
                 log.warn("필수 값 비었음: " + e.getMessage());
@@ -130,9 +132,9 @@ public class BoardController {
 
     // 게시글 수정하기
     @PostMapping("/board/update/{boardIdx}")
-    public String updateBoard(@PathVariable int boardIdx, @ModelAttribute BoardWriteRequest req, RedirectAttributes ra){
+    public String updateBoard(@PathVariable int boardIdx, @ModelAttribute BoardWriteRequest req, RedirectAttributes ra, @AuthenticationPrincipal LoginMember loginMember){
         try{
-            boardService.updateBoard(boardIdx, req);
+            boardService.updateBoard(boardIdx, req, loginMember.getMemberIdx());
         } catch (CustomException e){
             if (e instanceof BlankValueException){
                 log.warn("필수 값 비었음: "+e.getMessage());
@@ -154,10 +156,10 @@ public class BoardController {
 
     //게시글 삭제하기
     @PostMapping("/board/delete/{boardIdx}")
-    public String deleteBoard(@PathVariable int boardIdx, RedirectAttributes ra){
+    public String deleteBoard(@PathVariable int boardIdx, RedirectAttributes ra, @AuthenticationPrincipal LoginMember loginMember){
 
         try {
-            boardService.deleteBoard(boardIdx);
+            boardService.deleteBoard(boardIdx, loginMember.getMemberIdx());
         } catch (CustomException e) {
             if (e instanceof NotFoundException) {
                 log.warn("해당되는 게시글 없음: " + e.getMessage());

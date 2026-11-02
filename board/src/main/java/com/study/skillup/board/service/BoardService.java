@@ -1,6 +1,10 @@
 package com.study.skillup.board.service;
 
 import com.study.skillup.board.dto.BoardWriteRequest;
+import com.study.skillup.board.mapper.BoardFileMapper;
+import com.study.skillup.board.mapper.BoardMapper;
+import com.study.skillup.board.vo.BoardFileVo;
+import com.study.skillup.board.vo.BoardVo;
 import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.DBNotAffectedException;
 import com.study.skillup.common.exception.ErrorCode;
@@ -8,10 +12,6 @@ import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.common.file.FileStore;
 import com.study.skillup.common.file.StoredFile;
-import com.study.skillup.board.mapper.BoardFileMapper;
-import com.study.skillup.board.mapper.BoardMapper;
-import com.study.skillup.board.vo.BoardFileVo;
-import com.study.skillup.board.vo.BoardVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class BoardService {
     // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 DBNotAffectedException
     @Transactional
-    public void saveBoard(BoardWriteRequest req, MultipartFile file){
+    public void saveBoard(BoardWriteRequest req, MultipartFile file, int memberIdx){
 
         String title = req.title();
 
@@ -59,8 +59,7 @@ public class BoardService {
 
         boardVo.setTitle(title);
         boardVo.setContent(req.content());
-        // TODO: memberIdx: 1 임시값을 세션으로 적용
-        boardVo.setMemberIdx(1);
+        boardVo.setMemberIdx(memberIdx);
 
 
         // 0 이하면 예외, 비정상
@@ -107,7 +106,7 @@ public class BoardService {
     // 게시글 수정
     // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 NotFoundException 즉 해당되는 게시글 못찾음
-    public void updateBoard(int boardIdx, BoardWriteRequest req){
+    public void updateBoard(int boardIdx, BoardWriteRequest req, int memberIdx){
 
         String title = req.title();
 
@@ -119,8 +118,7 @@ public class BoardService {
         boardVo.setBoardIdx(boardIdx);
         boardVo.setTitle(title);
         boardVo.setContent(req.content());
-        // TODO: uptMemberIdx 1 임시값을 세션으로 적용
-        boardVo.setUptMemberIdx(1);
+        boardVo.setUptMemberIdx(memberIdx);
 
         if (boardMapper.updateBoard(boardVo) <= 0){
             throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "글 수정: UPDATE 0줄, boardIdx=" + boardIdx);
@@ -130,12 +128,11 @@ public class BoardService {
 
     // 게시글 삭제
     // DB에 변동 사항이 없으면 NotFoundException 즉 해당되는 게시글 못찾음
-    public void deleteBoard(int boardIdx){
+    public void deleteBoard(int boardIdx, int memberIdx){
 
         BoardVo boardVo = new BoardVo();
         boardVo.setBoardIdx(boardIdx);
-        // TODO: delMemberIdx 1 임시값을 세션으로 적용
-        boardVo.setDelMemberIdx(1);
+        boardVo.setDelMemberIdx(memberIdx);
 
         if (boardMapper.deleteBoard(boardVo) <= 0) {
             throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "글 삭제: UPDATE 0줄, boardIdx=" + boardIdx);

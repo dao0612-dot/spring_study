@@ -44,9 +44,12 @@
             if (res.ok) {
                 alert('가입되었습니다.');
                 location.href = '/member/login';
+            } else if (res.status === 403) {
+                alert('화면이 만료되었습니다. 새로고침 후 다시 시도해주세요.');
+                button.disabled = false;
             } else {
                 const body = await res.json();
-                alert(body.message);
+                alert(body.message ?? '오류가 발생했습니다.');
                 button.disabled = false;
             }
         } catch (err) {
