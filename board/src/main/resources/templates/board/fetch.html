@@ -21,6 +21,7 @@
 
         body.data.forEach(board => {
             const li = document.createElement('li');                 // <li> 태그를 만듬(화면엔 안뜸)
+            li.className = 'list-group-item';                        // <li class="list-group-item">
             const a = document.createElement('a');                   // <a> 태그를 만듬(화면엔 안뜸)
             a.href = '/board/detail/' + board.boardIdx;              // <a href="/board/detail/게시글 번호">
             a.textContent = board.title;                             // <a …>제목</a>
