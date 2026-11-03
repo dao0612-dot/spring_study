@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{common/head :: bootstrap}"></th:block>
     <title>게시글 쓰기</title>
 </head>
 <body>
 
 <div th:replace="~{common/header :: header}"></div>
-<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
+<main class="container">
+    <p class="alert alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
-<h1>글쓰기</h1>
+    <h1 class="mb-3">글쓰기</h1>
 
     <form id="write-form" th:action="@{/board/save}" method="post" enctype="multipart/form-data">
-        <label for="title">제목</label>
-        <input type="text" id="title" name="title">
-
-        <label for="content">내용</label>
-        <textarea id="content" name="content"></textarea>
-
-        <label for="file">파일 업로드</label>
-        <input type="file" id="file" name="file">
-
-        <button id="save-button" type="submit">게시글 작성</button>
-
+        <div class="mb-3">
+            <label class="form-label" for="title">제목</label>
+            <input class="form-control" type="text" id="title" name="title">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="content">내용</label>
+            <textarea class="form-control" id="content" name="content" rows="8"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="file">파일 업로드</label>
+            <input class="form-control" type="file" id="file" name="file">
+        </div>
+        <button class="btn btn-primary" id="save-button" type="submit">게시글 작성</button>
     </form>
+</main>
 
 <script>
 const form = document.getElementById('write-form');

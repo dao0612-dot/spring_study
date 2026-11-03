@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{common/head :: bootstrap}"></th:block>
     <title>요청을 처리할 수 없습니다</title>
 </head>
 <body>
 <div th:replace="~{common/header :: header}"></div>
 
-<!-- 폼 POST가 403일 때 부트가 이 화면을 보여 줌. 지금 시큐리티 403은 CSRF 토큰이 낡은 경우뿐 -->
-<h1>화면이 만료되었습니다</h1>
-<p>이전 화면으로 돌아가 새로고침한 뒤 다시 시도해주세요.</p>
-<a th:href="@{/}">홈으로</a>
+<main class="container">
+    <!-- 폼 POST가 403일 때 부트가 이 화면을 보여 줌. 지금 시큐리티 403은 CSRF 토큰이 낡은 경우뿐 -->
+    <div class="alert alert-warning">
+        <h1 class="h4 alert-heading">화면이 만료되었습니다</h1>
+        <p>이전 화면으로 돌아가 새로고침한 뒤 다시 시도해주세요.</p>
+        <a class="btn btn-primary" th:href="@{/}">홈으로</a>
+    </div>
+</main>
 </body>
 </html>

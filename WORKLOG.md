@@ -6,14 +6,16 @@
 
 ## [4주차] 2026-11-03(화)
 
-**주요 작업**: 스프링 시큐리티 5단계(앞부분) — 본인 글만 수정·삭제
+**주요 작업**: 스프링 시큐리티 5단계(앞부분) — 본인 글만 수정·삭제, 화면에 부트스트랩(CDN)
 
 작업 방식 표기: `[누가 먼저 → 다음 → …]`
 
 - 본인 글 검사(설계 5-5, 10장 11·16번 — 전날 정함): 실패 코드 `BOARD_NOT_OWNER`(403, "본인이 쓴 글만 수정·삭제할 수 있습니다.")와 새 예외 `NotOwnerException`, Service에 공통 검사(글을 **먼저 조회** → 없으면 "없음", 작성자 번호가 로그인 회원과 다르면 "본인 글 아님")를 두고 **수정 화면·수정 처리·삭제 처리** 세 곳이 사용(본인 글 검사를 제목 검사보다 먼저). 화면 컨트롤러는 남의 글이면 상세로 돌려보내며 안내, 없는 글은 지금처럼 목록 + 안내. 상세 화면에 안내 줄 추가 [Claude 단계 안내(파일·메서드·갈래별 이동 표) → 본인 작성 → Claude 검토(수정 화면만 목록으로 가던 것, 로그 구분자, 안내 줄 위치, 주석) → 수정]
 - 확인: 회원 A의 글을 회원 B로 수정 화면(링크·주소 직접 입력)·수정·삭제 → 상세 + 안내, A로는 됨, 없는 번호는 목록 + 안내 [본인 확인]
 
-수정 파일: common/exception/ErrorCode.java, common/exception/NotOwnerException.java(신규), BoardService.java, BoardController.java, board/detail.html
+- 화면에 부트스트랩: 받은 의견대로 **CDN으로 포함**(처음엔 npm으로 전달받아 확인 질문 → "CDN으로 포함시키기"). 들여오는 방법 넷(CDN·npm·직접 내려받기·WebJars) 비교 후 설계 문서(`design/2026-11-03_부트스트랩_CDN.md`). 공식 문서의 정식판(5.3.8) CDN 줄을 머리 조각 `common/head.html` 하나에 두고 모든 화면 `<head>`에서 가져옴(처음 복사한 6.0 시험판은 바꿈). 화면별 모양(메뉴 `navbar`, 본문 `container`, 목록 표, 입력 칸·버튼, 안내 상자)은 기능을 건드리지 않고 클래스만. 확인: 화면·기능 그대로, CDN 주소만 막으면 모양이 빠지는 것(CDN은 인터넷에 기댐) [받은 요구 "경로(로직)는 본인, CSS는 Claude" → 본인 CDN 연결·조각·화면 9개 연결 → Claude 화면별 클래스 → 본인 확인]
+
+수정 파일: common/exception/ErrorCode.java, common/exception/NotOwnerException.java(신규), BoardService.java, BoardController.java, board/detail.html, common/head.html(신규), 화면 템플릿 10개(부트스트랩), 설계 문서 2개(부트스트랩 신규, 시큐리티 5-6 보류)
 
 ## [4주차] 2026-11-02(월)
 

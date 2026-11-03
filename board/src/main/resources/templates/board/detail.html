@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{common/head :: bootstrap}"></th:block>
     <title>게시글 자세히 보기</title>
 </head>
 <body>
 <div th:replace="~{common/header :: header}"></div>
-<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
-<h1 th:text="${board.title}"></h1>
-<p th:text="${board.content}"></p>
-<p th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>
-<!--TODO: 수정일이 존재할 시 작성일이 안보이도록-->
-<p th:if="${board.uptDttm}" th:text="${#temporals.format(board.uptDttm, 'yyyy-MM-dd HH:mm')}"></p>
-<ul>
-    <li th:each="file : ${files}">
-        <a th:href="@{/board/file/download/{idx}(idx=${file.fileIdx})}" th:text="${file.fileOriginalName}"></a>
-        (<span th:text="${file.fileSize}"></span>)
-    </li>
-</ul>
-<a href="/board/list">목록</a>
-<a th:href="@{/board/edit/{idx}(idx=${board.boardIdx})}">수정</a>
-<form th:action="@{/board/delete/{idx}(idx=${board.boardIdx})}" method="post">
-    <button type="submit">삭제</button>
-</form>
+
+<main class="container">
+    <p class="alert alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+    <h1 class="mb-2" th:text="${board.title}"></h1>
+    <p class="text-muted small mb-1" th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>
+    <!--TODO: 수정일이 존재할 시 작성일이 안보이도록-->
+    <p class="text-muted small" th:if="${board.uptDttm}" th:text="${#temporals.format(board.uptDttm, 'yyyy-MM-dd HH:mm')}"></p>
+    <p class="border-top pt-3" th:text="${board.content}"></p>
+    <ul class="list-unstyled">
+        <li th:each="file : ${files}">
+            <a th:href="@{/board/file/download/{idx}(idx=${file.fileIdx})}" th:text="${file.fileOriginalName}"></a>
+            <span class="text-muted small">(<span th:text="${file.fileSize}"></span>)</span>
+        </li>
+    </ul>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="/board/list">목록</a>
+        <a class="btn btn-primary" th:href="@{/board/edit/{idx}(idx=${board.boardIdx})}">수정</a>
+        <form th:action="@{/board/delete/{idx}(idx=${board.boardIdx})}" method="post">
+            <button class="btn btn-danger" type="submit">삭제</button>
+        </form>
+    </div>
+</main>
 
 
 </body>

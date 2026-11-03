@@ -5,27 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-
+    <th:block th:replace="~{common/head :: bootstrap}"></th:block>
     <title>회원가입</title>
 </head>
 <body>
 
 <div th:replace="~{common/header :: header}"></div>
-<h1>회원가입</h1>
 
-<form id="join-form">
-    <label for="userId">아이디</label>
-    <input type="text" id="userId" name="userId">
+<main class="container">
+    <h1 class="mb-3">회원가입</h1>
 
-    <label for="pwd">비밀번호</label>
-    <input type="password" id="pwd" name="pwd">
-
-    <label for="name">이름</label>
-    <input type="text" id="name" name="name">
-
-    <button id="join-button" type="submit">회원가입</button>
-
-</form>
+    <form class="col-md-6" id="join-form">
+        <div class="mb-3">
+            <label class="form-label" for="userId">아이디</label>
+            <input class="form-control" type="text" id="userId" name="userId">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="pwd">비밀번호</label>
+            <input class="form-control" type="password" id="pwd" name="pwd">
+            <div class="form-text">8자 이상, 영문과 숫자를 모두 포함</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="name">이름</label>
+            <input class="form-control" type="text" id="name" name="name">
+        </div>
+        <button class="btn btn-primary" id="join-button" type="submit">회원가입</button>
+    </form>
+</main>
 
 <script>
     const form = document.getElementById('join-form');
