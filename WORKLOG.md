@@ -15,6 +15,8 @@
 
 - 화면에 부트스트랩: 받은 의견대로 **CDN으로 포함**(처음엔 npm으로 전달받아 확인 질문 → "CDN으로 포함시키기"). 들여오는 방법 넷(CDN·npm·직접 내려받기·WebJars) 비교 후 설계 문서(`design/2026-11-03_부트스트랩_CDN.md`). 공식 문서의 정식판(5.3.8) CDN 줄을 머리 조각 `common/head.html` 하나에 두고 모든 화면 `<head>`에서 가져옴(처음 복사한 6.0 시험판은 바꿈). 화면별 모양(메뉴 `navbar`, 본문 `container`, 목록 표, 입력 칸·버튼, 안내 상자)은 기능을 건드리지 않고 클래스만. 확인: 화면·기능 그대로, CDN 주소만 막으면 모양이 빠지는 것(CDN은 인터넷에 기댐) [받은 요구 "경로(로직)는 본인, CSS는 Claude" → 본인 CDN 연결·조각·화면 9개 연결 → Claude 화면별 클래스 → 본인 확인]
 
+- 상세의 "목록" 링크를 다른 링크처럼 `th:href="@{…}"`로 맞춤(앱 위치가 바뀌어도 앞에 붙음) [Claude 짚음 → 본인 수정]
+
 수정 파일: common/exception/ErrorCode.java, common/exception/NotOwnerException.java(신규), BoardService.java, BoardController.java, board/detail.html, common/head.html(신규), 화면 템플릿 10개(부트스트랩), 설계 문서 2개(부트스트랩 신규, 시큐리티 5-6 보류)
 
 ## [4주차] 2026-11-02(월)

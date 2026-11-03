@@ -23,7 +23,7 @@
         </li>
     </ul>
     <div class="d-flex gap-2">
-        <a class="btn btn-outline-secondary" href="/board/list">목록</a>
+        <a class="btn btn-outline-secondary" th:href="@{/board/list}">목록</a>
         <a class="btn btn-primary" th:href="@{/board/edit/{idx}(idx=${board.boardIdx})}">수정</a>
         <form th:action="@{/board/delete/{idx}(idx=${board.boardIdx})}" method="post">
             <button class="btn btn-danger" type="submit">삭제</button>
