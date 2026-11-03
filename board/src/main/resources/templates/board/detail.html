@@ -7,6 +7,7 @@
 </head>
 <body>
 <div th:replace="~{common/header :: header}"></div>
+<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 <h1 th:text="${board.title}"></h1>
 <p th:text="${board.content}"></p>
 <p th:text="${#temporals.format(board.regDttm, 'yyyy-MM-dd HH:mm')}"></p>

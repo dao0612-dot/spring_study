@@ -10,6 +10,7 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
     BOARD_FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
     BOARD_TITLE_BLANK(HttpStatus.BAD_REQUEST, "제목을 입력해주세요."),
+    BOARD_NOT_OWNER(HttpStatus.FORBIDDEN, "본인이 쓴 글만 수정·삭제할 수 있습니다."),
 
     // 회원
     JOIN_BLANK(HttpStatus.BAD_REQUEST, "아이디, 비밀번호, 이름을 모두 입력해주세요."),

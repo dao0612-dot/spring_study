@@ -5,10 +5,7 @@ import com.study.skillup.board.mapper.BoardFileMapper;
 import com.study.skillup.board.mapper.BoardMapper;
 import com.study.skillup.board.vo.BoardFileVo;
 import com.study.skillup.board.vo.BoardVo;
-import com.study.skillup.common.exception.BlankValueException;
-import com.study.skillup.common.exception.DBNotAffectedException;
-import com.study.skillup.common.exception.ErrorCode;
-import com.study.skillup.common.exception.NotFoundException;
+import com.study.skillup.common.exception.*;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.common.file.FileStore;
 import com.study.skillup.common.file.StoredFile;
@@ -101,12 +98,33 @@ public class BoardService {
         return boardVo;
     }
 
+    // 공통 검사 메서드
+    // 글을 꺼내 본인 글인지 확인: 없으면 NotFoundException, 남의 글이면 NotOwnerException
+    private BoardVo getOwnBoard(int boardIdx, int memberIdx){
+
+        BoardVo boardVo = boardMapper.selectBoard(boardIdx);
+        if (boardVo == null){
+            throw new NotFoundException(ErrorCode.BOARD_NOT_FOUND, "본인 글 확인: 없음, boardIdx="+boardIdx);
+        } else if (boardVo.getMemberIdx()!=memberIdx){
+            throw new NotOwnerException(ErrorCode.BOARD_NOT_OWNER, "본인 글 확인: 본인 글 아님, boardIdx="+boardIdx+", memberIdx="+memberIdx);
+        }
+
+        return boardVo;
+    }
+
+    // 수정 화면용 글 조회: 없으면 NotFoundException, 본인 글이 아니면 NotOwnerException
+    public BoardVo getBoardForEdit(int boardIdx, int memberIdx){
+        return getOwnBoard(boardIdx, memberIdx);
+    }
 
 
     // 게시글 수정
     // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 NotFoundException 즉 해당되는 게시글 못찾음
+    // 본인 글이 아니면 NotOwnerException
     public void updateBoard(int boardIdx, BoardWriteRequest req, int memberIdx){
+
+        getOwnBoard(boardIdx, memberIdx);
 
         String title = req.title();
 
@@ -128,7 +146,10 @@ public class BoardService {
 
     // 게시글 삭제
     // DB에 변동 사항이 없으면 NotFoundException 즉 해당되는 게시글 못찾음
+    // 본인 글이 아니면 NotOwnerException
     public void deleteBoard(int boardIdx, int memberIdx){
+
+        getOwnBoard(boardIdx, memberIdx);
 
         BoardVo boardVo = new BoardVo();
         boardVo.setBoardIdx(boardIdx);

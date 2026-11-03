@@ -2,10 +2,7 @@ package com.study.skillup.board.controller;
 
 
 import com.study.skillup.board.dto.BoardWriteRequest;
-import com.study.skillup.common.exception.BlankValueException;
-import com.study.skillup.common.exception.CustomException;
-import com.study.skillup.common.exception.DBNotAffectedException;
-import com.study.skillup.common.exception.NotFoundException;
+import com.study.skillup.common.exception.*;
 import com.study.skillup.common.file.DownloadFile;
 import com.study.skillup.board.service.BoardService;
 import com.study.skillup.member.security.LoginMember;
@@ -112,14 +109,18 @@ public class BoardController {
 
     // 게시글 수정 화면. 기존 제목·내용을 채워서. 글이 없으면 목록으로
     @GetMapping("/board/edit/{boardIdx}")
-    public String boardEdit(@PathVariable int boardIdx, Model model, RedirectAttributes ra) {
+    public String boardEdit(@PathVariable int boardIdx, Model model, RedirectAttributes ra, @AuthenticationPrincipal LoginMember loginMember) {
         try {
-            model.addAttribute("board", boardService.getBoard(boardIdx));
+            model.addAttribute("board", boardService.getBoardForEdit(boardIdx, loginMember.getMemberIdx()));
         } catch (CustomException e) {
             if (e instanceof NotFoundException) {
                 log.warn("해당되는 게시글이 없음: "+e.getMessage());
                 ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
                 return "redirect:/board/list";
+            } else if(e instanceof NotOwnerException) {
+              log.warn("다른 작성자의 게시글 수정 시도: "+e.getMessage());
+              ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
+              return "redirect:/board/detail/{boardIdx}";
             } else {
                 log.error("예상치 못한 오류. 예외 경로 미지정 의심", e);
                 ra.addFlashAttribute("errorMessage", "예기치 못한 오류 발생");
@@ -143,7 +144,11 @@ public class BoardController {
             } else if (e instanceof NotFoundException){
                 log.warn("해당되는 게시글 없음: "+e.getMessage());
                 ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
-                return "redirect:/board/list";
+                return "redirect:/board/detail/{boardIdx}";
+            } else if (e instanceof NotOwnerException){
+                log.warn("다른 작성자의 게시글 수정 시도: "+e.getMessage());
+                ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
+                return "redirect:/board/detail/{boardIdx}";
             } else {
                 log.error("예상치 못한 오류. 예외 처리 경로 미지정 의심", e);
                 ra.addFlashAttribute("errorMessage", "예기치 못한 오류 발생");
@@ -165,6 +170,10 @@ public class BoardController {
                 log.warn("해당되는 게시글 없음: " + e.getMessage());
                 ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
                 return "redirect:/board/list";
+            } else if (e instanceof NotOwnerException) {
+                log.warn("다른 작성자의 게시글 삭제 시도: "+e.getMessage());
+                ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
+                return "redirect:/board/detail/{boardIdx}";
             } else {
                 log.error("예상치 못한 오류. 예외 처리 미지정 의심", e);
                 ra.addFlashAttribute("errorMessage", "예기치 못한 오류 발생");
