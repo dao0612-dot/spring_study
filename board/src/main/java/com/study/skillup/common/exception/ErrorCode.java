@@ -17,6 +17,9 @@ public enum ErrorCode {
     PWD_RULE_VIOLATION(HttpStatus.BAD_REQUEST, "비밀번호는 8자 이상, 영문과 숫자를 모두 포함해야 합니다."),
     USER_ID_DUPLICATE(HttpStatus.CONFLICT, "이미 사용 중인 아이디입니다."),
 
+    // 공통(파일)
+    FILE_TYPE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "지정된 파일만 올릴 수 있습니다."),
+
     // 공통(서버)
     SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "저장이 완료되지 않았습니다. 다시 시도해주세요.");
 

@@ -11,11 +11,9 @@
 <div th:replace="~{common/header :: header}"></div>
 
 <main class="container">
-    <p class="alert alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-
     <h1 class="mb-3">글쓰기</h1>
 
-    <form id="write-form" th:action="@{/board/save}" method="post" enctype="multipart/form-data">
+    <form id="write-form" th:action="@{/api/board/save}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label" for="title">제목</label>
             <input class="form-control" type="text" id="title" name="title">
@@ -26,7 +24,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label" for="file">파일 업로드</label>
-            <input class="form-control" type="file" id="file" name="file">
+            <input class="form-control" type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.gif,.pdf,.txt,.hwp,.docx,.xlsx,.pptx">
+            <div class="form-text">jpg, jpeg, png, gif, pdf, txt, hwp, docx, xlsx, pptx 파일만 올릴 수 있습니다.</div>
         </div>
         <button class="btn btn-primary" id="save-button" type="submit">게시글 작성</button>
     </form>
@@ -42,7 +41,7 @@ form.addEventListener('submit', async (e) => {
     button.disabled = true;
 
     try {
-        const res = await fetch('/api/board/save', {method: 'POST', body: formData});
+        const res = await fetch(form.action, {method: 'POST', body: formData});
         if (res.ok) {
             alert('저장되었습니다.');
             location.href = '/board/list';

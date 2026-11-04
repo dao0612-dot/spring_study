@@ -21,7 +21,7 @@ public class SecurityConfig {
                                 "/", "/board/list", "/board/detail/**", "/board/fetch",
                                 "/api/board/list", "/board/file/download/**",
                                 "/member/join", "/api/member/join", "/member/login",
-                                "/error"
+                                "/error", "/.well-known/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

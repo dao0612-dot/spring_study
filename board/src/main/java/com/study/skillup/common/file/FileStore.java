@@ -1,6 +1,8 @@
 package com.study.skillup.common.file;
 
 
+import com.study.skillup.common.exception.ErrorCode;
+import com.study.skillup.common.exception.InvalidValueException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -12,12 +14,16 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 // 업로드 파일을 디스크(설정의 file.upload-dir)에 저장
 @Slf4j
 @Component
 public class FileStore {
+    // 허용 확장자 목록(소문자, 점 없이)
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg","jpeg","png","gif","pdf","txt","hwp","docx","xlsx","pptx");
     private final String uploadDir;
 
     public FileStore(@Value("${file.upload-dir}") String uploadDir) {
@@ -25,6 +31,7 @@ public class FileStore {
     }
 
     // 파일을 업로드 폴더에 새 이름(UUID + 확장자)으로 저장하고 정보를 돌려준다
+    // 허용 목록에 없는 확장자면 InvalidValueException
     public StoredFile store(MultipartFile file) {
         String originalName = file.getOriginalFilename();
 
@@ -32,6 +39,10 @@ public class FileStore {
         int dot = originalName.lastIndexOf(".");
         if (dot != -1) {
             ext = originalName.substring(dot);              // ".pdf" (점 포함)
+        }
+
+        if (!ALLOWED_EXTENSIONS.contains(ext.replace(".","").toLowerCase())) {
+            throw new InvalidValueException(ErrorCode.FILE_TYPE_NOT_ALLOWED, "파일 업로드: 형식 불일치 ext="+ext);
         }
 
         String saveName = UUID.randomUUID() + ext;
