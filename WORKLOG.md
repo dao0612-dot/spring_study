@@ -6,7 +6,7 @@
 
 ## [4주차] 2026-11-04(수)
 
-**주요 작업**: 첨부 파일 유효성(정해진 종류만 받기), 안 쓰는 폼 저장 길 정리
+**주요 작업**: 첨부 파일 유효성(정해진 종류만 받기), 안 쓰는 폼 저장 길 정리, 글 저장 후 상세 화면으로 이동
 
 작업 방식 표기: `[누가 먼저 → 다음 → …]`
 
@@ -14,9 +14,11 @@
 - 폼 저장 길 `/board/save` 지움(설계 10장 5번): fetch로 옮긴 뒤 학습용으로 남겨 둔 예비 길 → 새 규칙마다 두 곳을 고쳐야 해서 정리. 폼의 `th:action`은 CSRF 숨은 칸을 만들어 주므로 남기고 주소만 `/api/board/save`로, JS는 `fetch(form.action)`(주소를 한곳에만). 글쓰기 화면의 서버 안내 줄도 채우는 곳이 없어져 지움. 사라지는 학습 모양(실패 시 Model + 같은 화면)과 예전 코드 위치를 설계에 기록 [Claude 짚음 → 본인 결정·작성]
 - 확인 중 발견 둘: ① 업로드 크기 설정에 파일 하나 제한만 있고 요청 전체 제한(`max-request-size`)이 없어 기본값에 걸림 → 추가 ② 서버 재시작 뒤 로그인하면 404 — Chrome 개발자 도구가 알아서 보내는 요청(`/.well-known/…`)이 "로그인 뒤 돌아갈 곳"으로 저장됨 → `/.well-known/**` 허용 [본인 발견 → Claude 원인 → 본인 적용]
 - 확인: 허용 파일·대문자 확장자·파일 없이 글만 → 저장, 목록 밖 확장자·확장자 없음·점으로 시작 → 안내 + DB·업로드 폴더에 남는 것 없음, 저장 요청 주소·CSRF 정상, 내려받기 그대로 [본인 확인]
+- 글 저장 후 상세 화면으로 이동(받은 의견 10/27 "성공 후 이동은 정책 문제라 둘 다 해 보기" — 목록 이동은 10/27, 설계 `design/2026-11-04_저장후_상세이동.md`): Service 저장이 새 글 번호를 돌려줌(INSERT 때 이미 채워지는 번호 — 파일 없을 때·끝 두 곳), 저장 API 응답 `data`를 입력값(받아 쓰는 곳이 없었음) → 새 글 번호로, 글쓰기 JS가 본문을 읽어 "저장되었습니다." 뒤 `/board/detail/번호`로 [Claude 설계 초안 → 본인 결정(alert 유지, `data`는 받는 쪽이 할 일에 맞춰 번호만) → 본인 작성 → Claude 검토(`res.json()` 앞 `await` 빠짐) → 수정]
+- 확인: 파일 없이·파일 넣고 저장 → 201, 방금 쓴 글의 상세로 / 빈 제목·지정 밖 파일·세션 끊긴 뒤 저장 → 기존 안내 그대로 [본인 확인]
 - 남은 것: 제한을 넘는 파일은 서버가 413을 보내도 화면에선 "전송 실패"로 뜸(브라우저가 응답을 못 받음) → 보내기 전 JS 크기 검사 후보
 
-수정 파일: common/file/FileStore.java, common/exception/ErrorCode.java, BoardController.java, board/write.html, config/SecurityConfig.java, application.properties, 설계 문서(신규)
+수정 파일: common/file/FileStore.java, common/exception/ErrorCode.java, BoardController.java, BoardRestController.java, BoardService.java, board/write.html, config/SecurityConfig.java, application.properties, 설계 문서 2개(신규)
 
 ## [4주차] 2026-11-03(화)
 

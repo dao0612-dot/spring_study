@@ -32,12 +32,12 @@ public class BoardRestController {
     }
 
 
-    // 폼 데이터로 온 작성글, 파일(있다면) 저장 후 상태 코드 201+데이터 반환 | 실패는 ApiExceptionHandler
+    // 폼 데이터로 온 작성글, 파일(있다면) 저장 후 상태 코드 201+새 글번호 | 실패는 ApiExceptionHandler
     @PostMapping("/api/board/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDto<BoardWriteRequest> saveBoard(@ModelAttribute BoardWriteRequest req, @RequestParam(value = "file", required = false) MultipartFile file, @AuthenticationPrincipal LoginMember loginMember){
+    public ResponseDto<Integer> saveBoard(@ModelAttribute BoardWriteRequest req, @RequestParam(value = "file", required = false) MultipartFile file, @AuthenticationPrincipal LoginMember loginMember){
 
-        boardService.saveBoard(req, file, loginMember.getMemberIdx());
-        return new ResponseDto<>(null, req);
+        int boardIdx = boardService.saveBoard(req, file, loginMember.getMemberIdx());
+        return new ResponseDto<>(null, boardIdx);
     }
 }

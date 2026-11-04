@@ -40,10 +40,11 @@ public class BoardService {
 
 
     // 게시글 저장
+    // 새 글번호를 돌려준다
     // 제목이 없으면 BlankValueException
     // DB에 변동 사항이 없으면 DBNotAffectedException
     @Transactional
-    public void saveBoard(BoardWriteRequest req, MultipartFile file, int memberIdx){
+    public int saveBoard(BoardWriteRequest req, MultipartFile file, int memberIdx){
 
         String title = req.title();
 
@@ -66,7 +67,7 @@ public class BoardService {
         }
 
         if (file == null || file.isEmpty()){
-            return;
+            return boardVo.getBoardIdx();
         }
 
 
@@ -86,6 +87,8 @@ public class BoardService {
             fileStore.delete(storedFile.saveName());
             throw e;
         }
+
+        return boardVo.getBoardIdx();
     }
 
 

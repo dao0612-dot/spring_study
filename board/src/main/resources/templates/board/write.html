@@ -44,7 +44,8 @@ form.addEventListener('submit', async (e) => {
         const res = await fetch(form.action, {method: 'POST', body: formData});
         if (res.ok) {
             alert('저장되었습니다.');
-            location.href = '/board/list';
+            const body = await res.json();
+            location.href = '/board/detail/' + body.data;
         } else if (res.status === 413) {
             alert('파일이 너무 큽니다.');
             button.disabled = false;
