@@ -1,9 +1,7 @@
 package com.study.skillup.board.controller;
 
 
-import com.study.skillup.board.dto.BoardWriteRequest;
 import com.study.skillup.board.service.BoardService;
-import com.study.skillup.common.exception.BlankValueException;
 import com.study.skillup.common.exception.CustomException;
 import com.study.skillup.common.exception.NotFoundException;
 import com.study.skillup.common.exception.NotOwnerException;
@@ -19,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,10 +34,10 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    // 글쓰기 화면
+    // 글쓰기 화면(수정과 html 공유 form.html)
     @GetMapping("/board/write")
     public String boardWrite(){
-        return "board/write";
+        return "board/form";
     }
 
 
@@ -48,7 +45,7 @@ public class BoardController {
     @GetMapping("/board/list")
     public String boardList(Model model){
 
-        // board_list.html로 데이터를 가져간다. ${boards}가 받아쓴다.
+        // board/list.html로 데이터를 가져간다. ${boards}가 받아쓴다.
         model.addAttribute("boards",boardService.getBoardList());
 
         return "board/list";
@@ -78,7 +75,7 @@ public class BoardController {
     }
 
 
-    // 게시글 수정 화면. 기존 제목·내용을 채워서. 글이 없으면 목록으로
+    // 게시글 수정 화면. 기존 제목·내용을 채워서. 글이 없으면 목록으로(글쓰기와 html 공유 form.html)
     @GetMapping("/board/edit/{boardIdx}")
     public String boardEdit(@PathVariable int boardIdx, Model model, RedirectAttributes ra, @AuthenticationPrincipal LoginMember loginMember) {
         try {
@@ -98,35 +95,7 @@ public class BoardController {
                 return "redirect:/board/detail/{boardIdx}";
             }
         }
-        return "board/edit";
-    }
-
-
-    // 게시글 수정하기
-    @PostMapping("/board/update/{boardIdx}")
-    public String updateBoard(@PathVariable int boardIdx, @ModelAttribute BoardWriteRequest req, RedirectAttributes ra, @AuthenticationPrincipal LoginMember loginMember){
-        try{
-            boardService.updateBoard(boardIdx, req, loginMember.getMemberIdx());
-        } catch (CustomException e){
-            if (e instanceof BlankValueException){
-                log.warn("필수 값 비었음: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
-                return "redirect:/board/edit/{boardIdx}";
-            } else if (e instanceof NotFoundException){
-                log.warn("해당되는 게시글 없음: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
-                return "redirect:/board/detail/{boardIdx}";
-            } else if (e instanceof NotOwnerException){
-                log.warn("다른 작성자의 게시글 수정 시도: "+e.getMessage());
-                ra.addFlashAttribute("errorMessage", e.getCode().getMessage());
-                return "redirect:/board/detail/{boardIdx}";
-            } else {
-                log.error("예상치 못한 오류. 예외 처리 경로 미지정 의심", e);
-                ra.addFlashAttribute("errorMessage", "예기치 못한 오류 발생");
-                return "redirect:/board/edit/{boardIdx}";
-            }
-        }
-        return "redirect:/board/detail/{boardIdx}";
+        return "board/form";
     }
 
 

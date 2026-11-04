@@ -2,9 +2,9 @@ package com.study.skillup.board.controller;
 
 
 import com.study.skillup.board.dto.BoardWriteRequest;
-import com.study.skillup.common.dto.ResponseDto;
 import com.study.skillup.board.service.BoardService;
 import com.study.skillup.board.vo.BoardVo;
+import com.study.skillup.common.dto.ResponseDto;
 import com.study.skillup.member.security.LoginMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +38,14 @@ public class BoardRestController {
     public ResponseDto<Integer> saveBoard(@ModelAttribute BoardWriteRequest req, @RequestParam(value = "file", required = false) MultipartFile file, @AuthenticationPrincipal LoginMember loginMember){
 
         int boardIdx = boardService.saveBoard(req, file, loginMember.getMemberIdx());
+        return new ResponseDto<>(null, boardIdx);
+    }
+
+    // 폼 데이터로 온 수정글. 수정 후 상태 코드 200+글번호 | 실패는 ApiExceptionHandler
+    @PostMapping("/api/board/update/{boardIdx}")
+    public ResponseDto<Integer> updateBoard(@PathVariable int boardIdx, @ModelAttribute BoardWriteRequest req, @AuthenticationPrincipal LoginMember loginMember){
+
+        boardService.updateBoard(boardIdx, req, loginMember.getMemberIdx());
         return new ResponseDto<>(null, boardIdx);
     }
 }
