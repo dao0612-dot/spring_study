@@ -34,9 +34,16 @@
 <script>
 const form = document.getElementById('write-form');
 const button = document.getElementById('save-button');
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // "서버 설정 max-file-size와 맞출 것"
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const file = form.file.files[0]; // 파일 칸(name="file")에서 고른 파일, 없으면 undefined
+    if (file && file.size > MAX_FILE_SIZE){
+        alert('파일이 너무 큽니다.');
+        return;
+    }
+
     const formData = new FormData(form);
     button.disabled = true;
 
