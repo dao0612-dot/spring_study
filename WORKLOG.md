@@ -21,6 +21,7 @@
 
 - 글쓰기·수정 한 화면(받은 의견 10/27 저녁, 설계 `design/2026-11-04_글쓰기수정_한화면.md`): `write.html`·`edit.html` → `board/form.html` 하나(글이 있으면 수정 — 제목·처음 값·보낼 곳·파일 칸(수정엔 없음)·버튼 글자·취소를 이것으로 가름). 수정도 fetch로(실패하면 그 자리에 머물게): 수정 API `POST /api/board/update/{번호}` 새로(200, `data` = 글 번호 — 저장과 같은 모양이라 성공 처리 하나로, 알림도 "저장되었습니다." 하나), JS는 `form.action`을 써서 주소를 몰라도 됨. 403은 서버 문구가 있으면 그것(남의 글), 없으면 "화면이 만료되었습니다."(CSRF). form 수정 길(`/board/update`)은 지움 [Claude 설계 초안 → 본인 결정(이름 form, 알림 하나, 200) → 본인 작성 → Claude 검토(처음 값이 이름표에 붙음·이름표 글자 빠짐, 413 갈래(본인 의도로 뺐다가 안전망으로 되살림), 403 뒤 버튼 다시 켜기, 잘못 들어간 import, 주석) → 수정]
 - 확인: 글쓰기(파일 없이·있이) → 상세, 내 글 수정(처음 값·파일 칸 없음) → 상세에 바뀐 내용, 제목 비우기 → 문구·그 자리, 남의 글 수정 화면 주소 → 상세 + 안내, 다른 탭 로그아웃 뒤 수정 → 화면 만료, 다른 탭 삭제 뒤 수정 → 찾을 수 없음 [본인 확인]
+- 받은 의견(11/04 저녁): 남은 계획(자잘한 기능·화면 꾸미기)은 그대로, **jQuery를 한 번 써 볼 것**, 배포는 AWS로 편하게 해 볼 것
 
 수정 파일: common/file/FileStore.java, common/exception/ErrorCode.java, BoardController.java, BoardRestController.java, BoardService.java, board/form.html(신규, write·edit 합침), board/detail.html, config/SecurityConfig.java, application.properties, 설계 문서 4개(신규)
 
