@@ -1,0 +1,46 @@
+<!-- jQuery 동작 연습용 파일. 별도로 중요한 로직 없음 -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:replace="~{common/head :: bootstrap}"></th:block>
+    <title>게시판 리스트</title>
+</head>
+<body>
+<div th:replace="~{common/header :: header}"></div>
+
+<main class="container">
+    <ul class="list-group" id="board-list"></ul>
+</main>
+
+
+<!-- jQuery: 공식 사이트의 CDN 줄을 그대로 복사(integrity 포함) — 우리 script보다 먼저 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<script>
+    // 화면(HTML)이 다 읽히면 실행
+    $(function () {
+        $.ajax({
+            url: '/api/board/list',
+            method: 'GET',
+            dataType: 'json'                 // 응답을 JSON으로 읽어 객체로 줌(res.json() 역할)
+        })
+            .done(function (body) {              // 성공(2xx) 때: body = { message, data }
+                $.each(body.data, function (i, board) {      // (순번, 원소) 순서
+                    const $a = $('<a>')                       // <a> 만들기
+                        .attr('href', '/board/detail/' + board.boardIdx)
+                        .text(board.title);                   // textContent처럼 글자 그대로
+                    $('<li>')                                 // <li> 만들기
+                        .addClass('list-group-item')
+                        .append($a)                           // <li> 안에 <a>
+                        .appendTo('#board-list');             // 화면의 <ul>에 붙임
+                });
+            })
+            .fail(function () {                  // 실패(4xx·5xx·연결 실패) 때
+                alert('목록을 불러오지 못했습니다.');
+            });
+    });
+</script>
+</body>
+</html>

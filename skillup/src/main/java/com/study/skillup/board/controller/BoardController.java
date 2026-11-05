@@ -127,11 +127,11 @@ public class BoardController {
     }
 
 
-    // 게시글 목록(fetch 버전)
-    @GetMapping("/board/fetch")
-    public String boardFetch(){
+    // 게시글 목록(jQuery 버전, JS가 목록 API로 그림)
+    @GetMapping("/board/jquery")
+    public String boardJquery(){
 
-        return "board/fetch";
+        return "board/jquery";
     }
 
     // 첨부 파일 내려받기: 헤더에 원래 이름을 붙여 파일로 보낸다

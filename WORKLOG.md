@@ -4,6 +4,20 @@
 
 ---
 
+## [4주차] 2026-11-05(목)
+
+**주요 작업**: AWS(EC2) 배포(받은 의견), 프로젝트 이름 정리, jQuery 한 번(받은 의견)
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 프로젝트 이름 `board` → `skillup`(폴더, `pom.xml`, 앱 이름) — 패키지는 10/28에 바꿨지만 저장소 맨 위 폴더·jar·로그 이름이 `board`라 게시판 기능과 헷갈림. 배포 전에 맞춤(jar 이름이 서버 파일·서비스에 들어감) [본인 지적 → Claude 수정 → 본인 확인]
+- IntelliJ 없이 빌드(`mvnw clean package`)해 보니 실패 — `pom.xml`의 시험판 문법 옵션(`--enable-preview`, 코드에선 안 씀)이 터미널의 다른 JDK 버전과 맞지 않음 → 옵션 삭제(서버 실행에도 필요 없게) → jar 하나로 내 PC에서 실행 확인 [Claude 원인 → 본인 확인]
+- AWS 배포(설계 `design/2026-11-05_AWS_배포.md`): EC2 한 대(Amazon Linux 2023, 작은 사양, 보안 그룹은 SSH·앱 포트 모두 접속하는 IP만) → SSH 접속·Java 21 → 테이블 만들기 SQL을 내 PC H2에서 뽑아 정리(`skillup/db/schema-h2.sql`, 켤 때마다 실행해도 안전하게) → jar·SQL을 서버로 복사 → 서버용 설정 파일을 jar 옆에(DB는 H2 파일 모드, 업로드 경로, 저장소엔 안 올림) → 실행 → 서비스 등록(재부팅에도 자동 시작) → 가입·로그인·글쓰기·첨부·내려받기·재부팅 확인. DB는 H2로 먼저 올리고 MariaDB 교체는 뒤로, 인스턴스는 켜 둠 [Claude 설계 초안·단계별 명령 안내 → 본인 결정·실행 → 막힌 곳(키 파일 권한·경로, 설정 파일 이름 오타로 DB 연결 실패) Claude 원인 → 본인 수정]
+- jQuery 한 번(설계 `design/2026-11-05_jQuery.md`): 쓰이지 않던 fetch 목록 화면을 통째로 jQuery로(`board/jquery.html`, 주소 `/board/jquery`) — CDN(jQuery 3.7.1), `$.ajax`로 목록 API → `.done`에서 목록 그리기, `.fail`에서 안내 [Claude 완성 예시 → 본인 적용(CDN 줄은 공식 사이트에서) → 이름 바꾸기는 Claude]
+- 배포 갱신: 새 jar 빌드 → 서버에서 멈추고 예전 jar 보관 → 새 jar 복사 → 다시 켬 → 서버에서 jQuery 화면 확인, 기존 글 그대로 [본인 실행]
+
+수정 파일: `pom.xml`, `application.properties`(앱 이름), `skillup/db/schema-h2.sql`(신규), `BoardController.java`, `SecurityConfig.java`, `board/jquery.html`(fetch.html에서 이름 바꿈), 설계 문서 2개(신규), 폴더 이름 `board` → `skillup`
+
 ## [4주차] 2026-11-04(수)
 
 **주요 작업**: 첨부 파일 유효성(정해진 종류만 받기), 안 쓰는 폼 저장 길 정리, 글 저장 후 상세 화면으로 이동, 삭제 중복 제출·첨부 크기 미리 검사, 글쓰기·수정 한 화면
