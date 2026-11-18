@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/board/list", "/board/detail/**", "/board/jquery",
-                                "/api/board/list", "/board/file/download/**",
+                                "/api/board/list", "/board/file/download/**", "/board/excel/download",
                                 "/member/join", "/api/member/join", "/member/login",
                                 "/error", "/.well-known/**"
                         ).permitAll()
