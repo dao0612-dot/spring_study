@@ -1,3 +1,6 @@
 # Postman 작업 공간 (환경·전역 변수에 토큰 등이 들어갈 수 있어 올리지 않음)
 .postman/
 postman/
+
+# 비교용(원격 저장소 업로드 불필요)
+skillup/src/main/java/com/study/skillup/tabtap/
