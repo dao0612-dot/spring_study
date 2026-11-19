@@ -12,6 +12,9 @@ public enum ErrorCode {
     BOARD_TITLE_BLANK(HttpStatus.BAD_REQUEST, "제목을 입력해주세요."),
     BOARD_NOT_OWNER(HttpStatus.FORBIDDEN, "본인이 쓴 글만 수정·삭제할 수 있습니다."),
 
+    // 엑셀
+    Excel_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "엑셀에는 글을 1~100줄까지 넣을 수 있습니다."),
+
     // 회원
     JOIN_BLANK(HttpStatus.BAD_REQUEST, "아이디, 비밀번호, 이름을 모두 입력해주세요."),
     PWD_RULE_VIOLATION(HttpStatus.BAD_REQUEST, "비밀번호는 8자 이상, 영문과 숫자를 모두 포함해야 합니다."),

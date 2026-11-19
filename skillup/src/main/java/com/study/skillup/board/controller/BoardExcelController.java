@@ -1,12 +1,12 @@
 package com.study.skillup.board.controller;
 
 import com.study.skillup.board.service.BoardExcelService;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.study.skillup.common.dto.ResponseDto;
+import com.study.skillup.member.security.LoginMember;
+import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -34,5 +34,13 @@ public class BoardExcelController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
                 .contentType(XLSX)
                 .body(excel);
+    }
+
+    // 엑셀 업로드: 파일 내용을 토대로 게시글을 작성한다.
+    @PostMapping("/api/board/excel/upload")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDto<Integer> uploadBoardExcel(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal LoginMember loginMember) {
+        int excelCnt =  boardExcelService.uploadBoardExcel(file, loginMember.getMemberIdx());
+        return new ResponseDto<>(null, excelCnt);
     }
 }

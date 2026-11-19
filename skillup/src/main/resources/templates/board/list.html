@@ -14,6 +14,12 @@
 
     <h1 class="mb-3">게시판 리스트</h1>
     <a class="btn btn-outline-success btn-sm mb-3" th:href="@{/board/excel/download}">엑셀 받기</a>
+    <form th:if="${loggedIn}" th:action="@{/api/board/excel/upload}" method="post" enctype="multipart/form-data" id="excel-upload-form">
+        <label class="file-upload" for="file-input">엑셀 파일 업로드</label>
+        <input type="file" name="file" id="file-input" accept=".xlsx">
+        <button type="submit" id="excel-upload-btn">엑셀 올리기</button>
+    </form>
+    <p th:unless="${loggedIn}">로그인을 하면 엑셀 파일을 업로드해서 여러 글을 동시에 저장할 수 있습니다.</p>
     <table class="table table-hover">
         <thead class="table-light">
         <tr>
@@ -29,6 +35,60 @@
         </tbody>
     </table>
 </main>
+
+<script>
+
+    const excelUpload = document.getElementById("excel-upload-form");
+    const excelUploadBtn = document.getElementById("excel-upload-btn");
+    const MAX_FILE_SIZE = 100 * 1024 * 1024;
+
+if (excelUpload) {
+    excelUpload.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = excelUpload.file?.files[0];
+        if (!file) {
+            alert("업로드할 파일을 선택해주세요.");
+            return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            alert("파일이 너무 큽니다.");
+            return;
+        }
+
+        const formData = new FormData(excelUpload);
+        excelUploadBtn.disabled = true;
+
+        try {
+            const res = await fetch(excelUpload.action, {method: 'POST', body: formData})
+            if (res.ok) {
+                const body = await res.json();
+                alert(body.data + "개 저장되었습니다.");
+                location.reload();
+            } else if (res.status === 401) {
+                alert("로그인이 필요한 서비스입니다.");
+                excelUploadBtn.disabled = false;
+            } else if (res.status === 403) {
+                const body = await res.json();
+                alert(body.message ?? "화면이 만료되었습니다. 새로고침 후 다시 시도해주세요.");
+                excelUploadBtn.disabled = false;
+            } else if (res.status === 413) {
+                alert("파일이 너무 큽니다.");
+                excelUploadBtn.disabled = false;
+            } else {
+                const body = await res.json();
+                alert(body.message ?? "오류가 발생했습니다.");
+                excelUploadBtn.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            alert("전송에 실패했습니다. 다시 시도해주세요.");
+            excelUploadBtn.disabled = false;
+        }
+    });
+}
+</script>
 
 </body>
 </html>

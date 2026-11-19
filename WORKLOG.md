@@ -4,6 +4,19 @@
 
 ---
 
+## [6주차] 2026-11-18(수)
+
+**주요 작업**: 엑셀 다운로드·업로드 (1) 직접 구현(POI) — 받은 의견(11/17) "두 갈래로 만들고 장단점 비교"의 첫 갈래
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 설계(`design/2026-11-18_엑셀_업로드다운로드.md`): 다운로드 = 게시판 목록 → `.xlsx`, 업로드 = `.xlsx`(A열 제목·B열 내용) → 게시글 여러 개. 받은 의견을 준 쪽 검토 없이 같이 구상하고 바로 구현(특정 기술 지시가 없었음), 하면서 떠오른 것은 설계 10장에 [Claude 안 → 본인 결정]
+- 다운로드: POI(`poi-ooxml` 5.4.1), `BoardExcelService`가 기존 목록 조회로 통합문서를 만들어 바이트로 → `BoardExcelController`(`@RestController`)가 `ResponseEntity<byte[]>` + 한글 파일 이름. 공개 주소. 커밋 `7b3670d` [POI 처음이라 Claude 완성 예시 → 본인 따라 치기]
+- 업로드: 형식(`.xlsx`) → 줄 읽기(빈 줄 건너뜀, `DataFormatter`) → 줄 수 1~100 → 줄마다 **기존 `saveBoard` 재사용**(첨부 `null`) + `@Transactional`(한 줄이라도 실패면 전부 롤백), 응답 201 + 저장 수. 글쓰기(첨부)와 화면·API는 따로(첨부 = 보관, 엑셀 = 읽고 버림), 오류 코드는 형식·제목 빈칸 재사용 + 줄 수 하나 추가. 목록 화면에 form(`th:action` → 숨은 CSRF 칸) + fetch [본인 결정(재사용·201·reload) → 형식 검사·줄 수·저장·화면은 본인 작성, 엑셀 읽기는 Claude 예시 → Claude 검토(조건 반대·`FormData` 빈 상자·`disabled`·`await` 빠짐 등) → 본인 수정]
+- 시험: 정상·제목 빈칸(롤백 확인)·숫자 제목·빈 파일 통과. 가짜 `.xlsx`가 500 → 로그 맨 위 `NotOfficeXmlFileException` → 400으로. 로그인 안 한 업로드가 공용 오류 → 시큐리티 302를 fetch가 따라간 것 → `res.redirected`로 안내하기로 정함(코드는 다음에) [본인 시험 → Claude 원인 → 본인 수정]
+
+수정 파일: `pom.xml`, `BoardExcelService.java`·`BoardExcelController.java`(신규), `ErrorCode.java`, `SecurityConfig.java`, `board/list.html`, 설계 문서(신규)
+
 ## [4주차] 2026-11-05(목)
 
 **주요 작업**: AWS(EC2) 배포(받은 의견), 프로젝트 이름 정리, jQuery 한 번(받은 의견)

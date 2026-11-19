@@ -43,10 +43,11 @@ public class BoardController {
 
     // 게시글 목록
     @GetMapping("/board/list")
-    public String boardList(Model model){
+    public String boardList(Model model, @AuthenticationPrincipal LoginMember loginMember){
 
         // board/list.html로 데이터를 가져간다. ${boards}가 받아쓴다.
-        model.addAttribute("boards",boardService.getBoardList());
+        model.addAttribute("boards", boardService.getBoardList());
+        model.addAttribute("loggedIn", loginMember);
 
         return "board/list";
     }
