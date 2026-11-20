@@ -4,6 +4,19 @@
 
 ---
 
+## [6주차] 2026-11-20(금)
+
+**주요 작업**: AOP 공부 — 대리인(프록시) 확인, 실행 시간·호출 로그 Aspect 두 개, 같은 클래스 안 호출 함정
+
+작업 방식 표기: `[누가 먼저 → 다음 → …]`
+
+- 대리인 확인: 디버거로 `BoardController`의 `boardService`를 보니 `BoardService$$SpringCGLIB$$0` — `saveBoard`의 `@Transactional` 하나 때문에 빈 전체에 대리인, 딱지 없는 메서드는 그냥 통과 [Claude 안내 → 본인 확인·설명]
+- `spring-boot-starter-aop` 추가. `common/aop/TimeTraceAspect`(`@Around`, service 패키지 전체, `[TIME] 메서드 ms`) — 서비스 코드 수정 없이 목록·상세·로그인·저장에 로그 [처음이라 Claude 완성 예시 → 본인 넣고 실행]
+- `common/aop/CallTraceAspect`(`@Before`, controller 패키지, `[CALL] 메서드`) — `@Before`에 필요 없는 것(반환값·`proceed`·`try/finally`)은 본인이 빼고, 남은 시간 재기 두 줄은 검토 후 뺌. 매개변수 값은 안 찍음(가입 요청의 비밀번호 — `toString` 오버라이드는 그 클래스만의 방어) [본인 작성 → Claude 검토 → 본인 수정]
+- 함정 실험: `getOwnBoard`를 잠깐 `public`으로 → 수정 화면에서 `getBoardForEdit`만 찍히고 `getOwnBoard`는 안 찍힘(같은 빈 안 `this` 호출은 대리인을 안 거침) → `private`로 되돌림. 업로드 롤백은 바깥 `uploadBoardExcel` 트랜잭션이 열고 `saveBoard`가 합류한 것 [Claude 실험 안 → 본인 실행]
+
+수정 파일: `pom.xml`, `common/aop/TimeTraceAspect.java`·`CallTraceAspect.java`(신규)
+
 ## [6주차] 2026-11-19(목)
 
 **주요 작업**: 엑셀 (1) 마무리(로그인 때만 업로드 칸), (2) 받은 회사 유틸로 같은 목록 받아 비교
